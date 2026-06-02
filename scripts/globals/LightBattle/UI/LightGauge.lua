@@ -39,17 +39,20 @@ function LightGauge:init(type, amount, x, y, enemy, color)
         self.reversed = amount >= 0 and true or false -- allows for mercy reduction
     end
     
-    if not Kristal.getLibConfig("magical-glass", "enemy_gauge_smoothness") and self.max_value >= self.real_value then
+    if not self:isSmoothGauge() and self.max_value >= self.real_value then
         self.timer:every(2/30, function()
             self:setValue()
         end)
     end
 end
 
+-- this only exists so deltatraveler addon lib can hook it
+function LightGauge:isSmoothGauge() return false end
+
 function LightGauge:update()
     super.update(self)
-    
-    if Kristal.getLibConfig("magical-glass", "enemy_gauge_smoothness") and self.max_value >= self.real_value then
+
+    if self:isSmoothGauge() and self.max_value >= self.real_value then
         self:setValue()
     end
 end

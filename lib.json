@@ -4,17 +4,12 @@
     "authors": [
         "Nyakorita",                    // Original Author
         "Sam Deluxe",                   // Previous Author and Lead Programmer
-        "FireRainV",                    // Current Developer
+        "FireRainV",                    // MagicalGlass Redux Developer
         "SadDiamondMan",                // Frisk
-        "Azrael",                       // Susie Light World Battle Sprites
-        "Trashcat",                     // Blue Soul
-        "Annie",                        // Green Soul
-        "vitellary",                    // Yellow Soul
-        "TheSkerch",                    // Purple Soul
         "DiamondBor"                    // Ok so i did some stuff
     ],
     
-    "version": "v4.0.0",
+    "version": "v1.0.0",
     "engineVer": "v0.10.0-dev",
     "default": true,
 
@@ -162,14 +157,10 @@
         //
         // "deltatraveler"
         // The gauge styles used in Deltatraveler.
+        // REQUIRES `mgr-deltatraveler` ADDON TO WORK !!!!! Does NOT work without it
         //
         /////
         "gauge_style": "undertale",
-        
-        ///// Enemy Gauge Smoothness
-        // Whether the enemy HP/MERCY bar when hit/gain mercy will be smooth like Deltatraveler or be accurate to Undertale.
-        /////
-        "enemy_gauge_smoothness": false,
 
         ///// Mercy Bar
         // Draws the Mercy Bar in Light Battles.
@@ -260,12 +251,6 @@
         // Whether when playing with multiple party members, the UI will be less bloated.
         /////
         "multi_minimal_ui": true,
-        
-        ///// Yellow Soul BIGSHOT Cheat
-        // Whether you're allowed to use the bug where you can chain BIGSHOTs
-        // rapidly by pressing the confirm button while holding another confirm button.
-        /////
-        "yellow_soul_allowcheat": true,
         
         ///// Debug Mode
         // Determines whether the library is in its debug mode state.

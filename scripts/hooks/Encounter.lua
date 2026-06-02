@@ -23,8 +23,6 @@ function Encounter:canFlee()
     return self.can_flee
 end
 
-function Encounter:getMonsterSoul() end
-
 function Encounter:onTurnEnd()
     self.flee_chance = self.flee_chance + 10
 

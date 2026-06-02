@@ -16,12 +16,6 @@ function PartyMember:init()
         magic = 0
     }
 
-    -- Whether the soul will be upside-down or not (optional)
-    self.monster_soul = false
-
-    -- Gives a shield in the light world
-    self.darkner_shield = false
-    
     -- Message will show even if the member is the soul character
     self.force_gameover_message = false
 
@@ -77,12 +71,6 @@ function PartyMember:init()
             end
         end)
     end
-end
-
-function PartyMember:getMonsterSoul() return self.monster_soul end
-
-function PartyMember:getDarknerShield()
-    return self.darkner_shield
 end
 
 function PartyMember:getForceGameOverMessage()
