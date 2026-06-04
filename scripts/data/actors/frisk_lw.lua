@@ -18,7 +18,7 @@ function actor:init()
     
     -- A table that defines where the Soul should be placed on this actor if they are a player.
     -- First value is x, second value is y.
-    self.soul_offset = {10, 21.5}
+    self.soul_offset = {9.5, 21.5}
 
     -- Path to this actor's sprites (defaults to "")
     self.path = "party/frisk/light"
