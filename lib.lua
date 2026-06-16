@@ -877,7 +877,7 @@ function Lib:setSeriousMode(v)
 end
 
 function Lib:onFootstep(char, num)
-    if self.encounters_enabled and self.in_encounter_zone and Game.world.player and char:includes(Player) then
+    if self.steps_until_encounter and self.encounters_enabled and self.in_encounter_zone and Game.world.player and char:includes(Player) then
         self.steps_until_encounter = self.steps_until_encounter - 1
     end
 end

@@ -3781,7 +3781,6 @@ function LightBattle:updateMenuWaves()
     end
 end
 
-
 function LightBattle:updateShortActText()
     if Input.pressed("confirm") or Kristal.getLibConfig("magical-glass", "undertale_text_skipping") ~= false and Input.down("menu") then
         if (not self.battle_ui.short_act_text_1:isTyping()) and

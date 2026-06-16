@@ -9,7 +9,7 @@ function LightActionBox:init(x, y, index, battler)
     self.selected_button = 1
     self.last_button = 1
 
-    if not Game.battle.encounter.event then
+    if not Game.battle.encounter.event or Game.battle.encounter.show_battle_ui then
         self:createButtons()
     end
 end

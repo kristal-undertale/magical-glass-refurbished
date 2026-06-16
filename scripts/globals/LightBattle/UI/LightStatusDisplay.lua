@@ -99,7 +99,7 @@ function LightStatusDisplay:drawStatusStrip()
             local karma = battler.karma
 
             love.graphics.setFont(Assets.getFont("namelv", 24))
-            Draw.setColor(MG_PALETTE["player_text"])
+            Draw.setColor(MG_PALETTE["player_text"], self.alpha)
             love.graphics.print(name .. "   "..(Game:isLight() and Kristal.getLibConfig("magical-glass", "light_level_name_short") or Kristal.getLibConfig("magical-glass", "light_level_name_dark")).." " .. level, x, y)
             
             Draw.draw(Assets.getTexture("ui/lightbattle/hp"), x + 214 - karma_mode_offset, y + 5)
@@ -118,12 +118,12 @@ function LightStatusDisplay:drawStatusStrip()
                 Draw.draw(Assets.getTexture("ui/lightbattle/kr"), x + 245 + size * 1.2 + 1 + 9 - karma_mode_offset, y + 5)
             end
 
-            Draw.setColor(Game:isLight() and (karma_mode and MG_PALETTE["player_karma_health_bg"] or MG_PALETTE["player_health_bg"]) or (karma_mode and MG_PALETTE["player_karma_health_bg_dark"] or PALETTE["action_health_bg"]))
+            Draw.setColor(Game:isLight() and (karma_mode and MG_PALETTE["player_karma_health_bg"] or MG_PALETTE["player_health_bg"]) or (karma_mode and MG_PALETTE["player_karma_health_bg_dark"] or PALETTE["action_health_bg"]), self.alpha)
             love.graphics.rectangle("fill", x + 245 - karma_mode_offset, y, size * 1.2 + 1, 21)
             if current > 0 then
-                Draw.setColor(Game:isLight() and MG_PALETTE["player_karma_health"] or MG_PALETTE["player_karma_health_dark"])
+                Draw.setColor(Game:isLight() and MG_PALETTE["player_karma_health"] or MG_PALETTE["player_karma_health_dark"], self.alpha)
                 love.graphics.rectangle("fill", x + 245 - karma_mode_offset, y, (limit == true and math.ceil((MathUtils.clamp(current, 0, max + (karma_mode and 5 or 10)) / max) * size) * 1.2 + 1 or MathUtils.clamp(current, 0, max + (karma_mode and 5 or 10)) * 1.2 + 1), 21)
-                Draw.setColor(Game:isLight() and MG_PALETTE["player_health"] or {battler.chara:getColor()})
+                Draw.setColor(Game:isLight() and MG_PALETTE["player_health"] or {battler.chara:getColor()}, self.alpha)
                 love.graphics.rectangle("fill", x + 245 - karma_mode_offset, y, (limit == true and math.ceil((MathUtils.clamp(current - karma, 0, max + (karma_mode and 5 or 10)) / max) * size) * 1.2 + 1 or MathUtils.clamp(current - karma, 0, max + (karma_mode and 5 or 10)) * 1.2 + 1) - (karma_mode and 1 or 0), 21)
             end
 
@@ -141,7 +141,7 @@ function LightStatusDisplay:drawStatusStrip()
                 end
             end
             
-            Draw.setColor(color)
+            Draw.setColor(color, self.alpha)
             love.graphics.print(current .. " / " .. max, x + 245 + size * 1.2 + 1 + 14 + (karma_mode and Assets.getTexture("ui/lightbattle/kr"):getWidth() + 12 or 0) - karma_mode_offset, y)
         else
             local x, y = 22 + (3 - #Game.battle.party - (#Game.battle.party == 2 and 0.4 or 0)) * 102 + (index - 1) * 102 * 2 * (#Game.battle.party == 2 and (1 + 0.4) or 1), 10

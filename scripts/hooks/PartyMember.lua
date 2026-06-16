@@ -319,7 +319,7 @@ function PartyMember:getNameOrYou(lower)
 end
 
 function PartyMember:onLightLevelUp()
-    if self:getLightLV() == "number" and (self:getLightLV() < #self.lw_exp_needed or self:getLightEXPNeeded(#self.lw_exp_needed) >= self.lw_exp) then
+    if type(self:getLightLV()) == "number" and (self:getLightLV() < #self.lw_exp_needed or self:getLightEXPNeeded(#self.lw_exp_needed) >= self.lw_exp) then
         local old_lv = self:getLightLV()
 
         local new_lv = 1

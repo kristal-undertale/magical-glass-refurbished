@@ -1,3 +1,32 @@
+---@class LightEncounter
+---
+---@field text string Text displayed when the battle starts.
+---@field event boolean Whether this is an "event" encounter. Event encounters cannot be attacked, only show HP and LV, and start a wave as soon as the battle begins.
+---@field event_waves string[] Waves used by event encounters.
+---
+---@field soul_target table? Default position the soul should move to during the battle transition. If `nil`, the default battle transition position is used.
+---@field soul_offset table? Offset applied to the soul during the battle transition.
+---@field fast_transition boolean? Whether the soul transition should be sped up. Useful for world hazard encounters.
+---
+---@field background (boolean|string)? Whether the default grid background is drawn.
+---@field music string? The music used for this encounter.
+---@field default_xactions boolean? Whether party members have the X-Action option in their spell menu.
+---
+---@field no_end_message boolean? Whether the battle skips the "YOU WON!" text.
+---@field queued_enemy_spawns table[]? Enemy spawns queued before the battle exists.
+---@field defeated_enemies table? Copy of `battle.defeated_enemies`, used to determine how each enemy was defeated.
+---
+---@field karma_mode boolean? Whether Karma/KR UI changes are enabled.
+---@field invincible boolean? Whether `"* But it refused."` replaces the game over and revives the player.
+---
+---@field can_flee boolean? Whether the flee command is available in the mercy menu.
+---@field yellow_funnycheat number? Amount of times the player used the yellow soul's BIGSHOT cheat.
+---@field flee_chance number? Chance of successfully fleeing. Increases by 10 every turn.
+---@field flee_messages string[]? Random flee messages shown after successfully running away.
+---
+---@field reduced_tension? boolean Whether tension gain is reduced for this encounter.
+---
+---@overload fun(...) : LightEncounter
 local LightEncounter = Class()
 
 function LightEncounter:init()
@@ -7,6 +36,10 @@ function LightEncounter:init()
     -- Is an "event" encounter (can't attack, only hp and lv are shown. A wave is started as soon as the battle starts)
     self.event = false
     self.event_waves = {"_empty"}
+
+    -- For event/cutscene encounters: show the full battle HUD (name + LV/HP strip and the action
+    -- buttons) instead of the compact event strip. The buttons are non-interactive in a cutscene.
+    self.show_battle_ui = false
     
     -- A table defining the default location of where the soul should move to
     -- during the battle transition. If this is nil, it will move to the default location.
@@ -268,7 +301,7 @@ end
 
 function LightEncounter:createBackground()
     if self.background then
-        local background = Sprite("ui/lightbattle/backgrounds/standard", 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH)
+        local background = Sprite(type(self.background) == "string" and self.background or "ui/lightbattle/backgrounds/standard", 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH)
         background:setColor(Game:isLight() and {34 / 255, 177 / 255, 76 / 255, 1} or {175 / 255, 35 / 255, 175 / 255, 1})
         background:setParallax(0, 0)
         background.layer = LIGHT_BATTLE_LAYERS["background"]

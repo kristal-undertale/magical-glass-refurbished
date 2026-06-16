@@ -63,4 +63,14 @@ function DialogueText:skipHeld()
     return super.skipHeld(self)
 end
 
+function DialogueText:shouldAdvance()
+    if Kristal.getLibConfig("magical-glass", "undertale_text_skipping") == true then
+        if self:isTyping() then return false end
+        if self.auto_advance or self.should_advance then return true end
+        if self.can_advance and Input.pressed("confirm") then return true end
+        return false
+    end
+    return super.shouldAdvance(self)
+end
+
 return DialogueText

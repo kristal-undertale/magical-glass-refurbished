@@ -83,6 +83,8 @@ function LightEnemyBattler:init(actor, use_overlay)
     self.menu_waves = {}
 
     self.check = "Remember to change\nyour check text!"
+    -- If true, the check text will have the enemy's name appended to it.
+    self.check_append = true
 
     self.text = {}
 
@@ -611,18 +613,19 @@ function LightEnemyBattler:onActStart(battler, name) end
 function LightEnemyBattler:onAct(battler, name)
     if name == "Check" then
         self:onCheck(battler)
+        local appended = self.check_append and ("* " .. string.upper(self.name) .. " - ") or ""
         if type(self.check) == "table" then
             local tbl = {}
             for i, check in ipairs(self.check) do
                 if i == 1 then
-                    table.insert(tbl, "* " .. string.upper(self.name) .. " - " .. check)
+                    table.insert(tbl, appended .. check)
                 else
-                    table.insert(tbl, "* " .. check)
+                    table.insert(tbl, (self.check_append ~= "" and "* " or "") .. check)
                 end
             end
             return tbl
         else
-            return "* " .. string.upper(self.name) .. " - " .. self.check
+            return appended .. self.check
         end
     end
 end
