@@ -1,5 +1,10 @@
+---@class ImageViewerBroken : Sprite
+---@overload fun(...) : ImageViewerBroken
 local ImageViewerBroken, super = Class(Sprite)
 
+---@param sprite string
+---@param x number
+---@param y number
 function ImageViewerBroken:init(sprite, x, y)
     super.init(self, sprite, x, y)
 

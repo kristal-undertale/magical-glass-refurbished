@@ -1,3 +1,5 @@
+---@class LightPartyBattler
+---@overload fun(...) : LightPartyBattler
 local LightPartyBattler = Class()
 
 function LightPartyBattler:init(chara)
@@ -33,6 +35,7 @@ function LightPartyBattler:canTarget()
     end
 end
 
+---@param amount number
 function LightPartyBattler:calculateDamage(amount)
     local def = self.chara:getStat("defense")
     local max_hp = self.chara:getStat("health")
@@ -62,6 +65,7 @@ function LightPartyBattler:calculateDamage(amount)
     return math.max(amount, 1)
 end
 
+---@param amount number
 function LightPartyBattler:calculateDamageSimple(amount)
     if Game:isLight() then
         return math.ceil(amount - (self.chara:getStat("defense") / 5))
@@ -92,6 +96,8 @@ function LightPartyBattler:getElementReduction(element)
     return math.max(0.25, reduction)
 end
 
+---@param amount number
+---@param exact boolean
 function LightPartyBattler:hurt(amount, exact, color, options)
     options = options or {}
     
@@ -127,6 +133,8 @@ function LightPartyBattler:hurt(amount, exact, color, options)
     end
 end
 
+---@param amount number
+---@param swoon boolean
 function LightPartyBattler:removeHealth(amount, swoon)
     if (self.chara:getHealth() <= 0) then
         amount = MathUtils.round(amount / 4)
@@ -147,6 +155,8 @@ function LightPartyBattler:removeHealth(amount, swoon)
     self:checkHealth(swoon)
 end
 
+---@param amount number
+---@param swoon boolean
 function LightPartyBattler:removeHealthBroken(amount, swoon)
     self.chara:setHealth(self.chara:getHealth() - amount)
     if (self.chara:getHealth() <= 0) then
@@ -193,6 +203,8 @@ function LightPartyBattler:revive()
     self.is_down = false
 end
 
+---@param amount number
+---@param playsound boolean
 function LightPartyBattler:heal(amount, playsound)
     Mod.libs["magical-glass"].heal_amount = amount
 
@@ -201,6 +213,7 @@ function LightPartyBattler:heal(amount, playsound)
     self:checkHealth(false)
 end
 
+---@param swoon boolean
 function LightPartyBattler:checkHealth(swoon)
     if (not self.is_down) and self.chara:getHealth() <= 0 then
         if swoon then
@@ -221,6 +234,7 @@ function LightPartyBattler:isTargeted()
     return self.targeted
 end
 
+---@param amount number
 function LightPartyBattler:addKarma(amount)
     self.karma = self.karma + amount
 end
@@ -280,6 +294,7 @@ function LightPartyBattler:updateKarma()
     end
 end
 
+---@param value number
 function LightPartyBattler:toggleSaveButton(value)
     if value == nil then
         self.has_save = not self.has_save

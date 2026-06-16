@@ -1,3 +1,4 @@
+---@class Savepoint
 local Savepoint, super = HookSystem.hookScript(Savepoint)
 
 function Savepoint:init(x, y, properties)

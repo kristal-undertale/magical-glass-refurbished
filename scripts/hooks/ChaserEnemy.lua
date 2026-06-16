@@ -1,3 +1,4 @@
+---@class ChaserEnemy
 local ChaserEnemy, super = HookSystem.hookScript(ChaserEnemy)
 
 function ChaserEnemy:init(actor, x, y, properties)

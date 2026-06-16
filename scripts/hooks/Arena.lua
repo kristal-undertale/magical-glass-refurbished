@@ -1,3 +1,4 @@
+---@class Arena
 local Arena, super = HookSystem.hookScript(Arena)
 
 function Arena:init(x, y, shape)

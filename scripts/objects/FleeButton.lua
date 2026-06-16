@@ -1,5 +1,8 @@
+---@class FleeButton : ActionButton
+---@overload fun(...) : FleeButton
 local FleeButton, super = Class(ActionButton)
 
+---@param flee_only boolean
 function FleeButton:init(flee_only)
     super.init(self, "flee")
     

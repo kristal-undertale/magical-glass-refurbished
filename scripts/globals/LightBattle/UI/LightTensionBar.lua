@@ -1,5 +1,9 @@
+---@class LightTensionBar : Object
+---@overload fun(...) : LightTensionBar
 local LightTensionBar, super = Class(Object)
 
+---@param x number
+---@param y number
 function LightTensionBar:init(x, y, dont_animate)
     if Game.world and (not x) then
         local x2 = Game.world.camera:getRect()
@@ -110,6 +114,7 @@ function LightTensionBar:getTension250()
     return self:getPercentageFor(Game:getTension()) * 250
 end
 
+---@param amount number
 function LightTensionBar:setTensionPreview(amount)
     self.tension_preview = amount
 end

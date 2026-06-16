@@ -1,3 +1,5 @@
+---@class LightEnemySprite : Object
+---@overload fun(...) : LightEnemySprite
 local LightEnemySprite, super = Class(Object)
 
 function LightEnemySprite:init(actor, enemy)
@@ -88,6 +90,8 @@ function LightEnemySprite:resetSprite(ignore_actor_callback)
     self.actor:onResetSprite(self)
 end
 
+---@param offset_x number
+---@param offset_y number
 function LightEnemySprite:flash(offset_x, offset_y, layer)
     if ClassUtils.getClassName(self.enemy:getActiveSprite()) == "LightEnemySprite" then
         local flashed_sprites = {}
@@ -100,6 +104,7 @@ function LightEnemySprite:flash(offset_x, offset_y, layer)
     end
 end
 
+---@param part_id string
 function LightEnemySprite:getPart(part_id, parent)
     return parent and self.parts[part_id] or self.parts[part_id] and self.parts[part_id].sprite
 end

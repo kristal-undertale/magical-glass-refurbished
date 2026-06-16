@@ -1,3 +1,4 @@
+---@class DarkInventory
 local DarkInventory, super = HookSystem.hookScript(DarkInventory)
 
 function DarkInventory:convertToLight()

@@ -1,3 +1,4 @@
+---@class BattleCutscene
 local BattleCutscene, super = HookSystem.hookScript(BattleCutscene)
 
 function BattleCutscene:text(text, portrait, actor, options)

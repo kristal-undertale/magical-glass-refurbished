@@ -1,3 +1,17 @@
+---@class PartyMember
+---@field short_name string?
+---@field force_gameover_message boolean
+---@field undertale_movement boolean
+---@field lw_health integer
+---@field lw_exp integer
+---@field lw_lv integer
+---@field lw_stats table<string, number>
+---@field lw_stats_bonus table<string, number>
+---@field lw_stat_text string[]
+---@field lw_portrait string?
+---@field light_color table
+---@field light_battle_hp_gauge_length_cap integer?
+---@field mg_initialized boolean
 local PartyMember, super = HookSystem.hookScript(PartyMember)
 
 function PartyMember:init()
@@ -338,6 +352,7 @@ function PartyMember:onLightLevelUp()
     end
 end
 
+---@param exp number
 function PartyMember:setLightEXP(exp)
     self.lw_exp = exp
 
@@ -346,6 +361,7 @@ function PartyMember:setLightEXP(exp)
     end
 end
 
+---@param exp number
 function PartyMember:addLightEXP(exp)
     if type(self:getLightEXP()) == "number" then
         if self:getLightEXP() >= self.lw_exp_needed[1] and self:getLightEXP() <= self.lw_exp_needed[#self.lw_exp_needed] then
@@ -356,6 +372,7 @@ function PartyMember:addLightEXP(exp)
     end
 end
 
+---@param level number
 function PartyMember:setLightLV(level, force_exp)
     self.lw_lv = level
 
@@ -532,6 +549,7 @@ function PartyMember:getLightXActColor()
     end
 end
 
+---@param damage number
 function PartyMember:onLightAttackHit(enemy, damage) end
 
 function PartyMember:onSave(data)

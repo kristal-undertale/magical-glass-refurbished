@@ -1,3 +1,4 @@
+---@class Shop
 local Shop, super = HookSystem.hookScript(Shop)
 
 function Shop:init()

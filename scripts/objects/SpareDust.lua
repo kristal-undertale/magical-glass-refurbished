@@ -1,5 +1,9 @@
+---@class SpareDust : Sprite
+---@overload fun(...) : SpareDust
 local SpareDust, super = Class(Sprite)
 
+---@param x number
+---@param y number
 function SpareDust:init(x, y)
     super.init(self, "effects/lightspare/dustcloud", x, y)
 

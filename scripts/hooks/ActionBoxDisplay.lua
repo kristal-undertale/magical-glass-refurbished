@@ -1,3 +1,4 @@
+---@class ActionBoxDisplay
 local ActionBoxDisplay, super = HookSystem.hookScript(ActionBoxDisplay)
 
 function ActionBoxDisplay:draw() -- Fixes an issue with HP higher than normal + MGR Karma

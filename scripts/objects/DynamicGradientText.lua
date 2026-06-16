@@ -1,5 +1,12 @@
+---@class DynamicGradientText : Text
+---@overload fun(...) : DynamicGradientText
 local DynamicGradientText, super = Class(Text)
 
+---@param text string
+---@param x number
+---@param y number
+---@param w number
+---@param h number
 function DynamicGradientText:init(text, x, y, w, h, colors, options)
     if type(w) == "table" then
         options = w
@@ -16,6 +23,10 @@ function DynamicGradientText:init(text, x, y, w, h, colors, options)
     self.gradient_colors = colors or {}
 end
 
+---@param r number
+---@param g number
+---@param b number
+---@param a number
 function DynamicGradientText:setColor(r, g, b, a)
     self.gradient_colors = {}
     

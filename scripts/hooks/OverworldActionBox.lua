@@ -1,3 +1,4 @@
+---@class OverworldActionBox
 local OverworldActionBox, super = HookSystem.hookScript(OverworldActionBox)
 
 function OverworldActionBox:draw() -- Fixes an issue with HP higher than normal

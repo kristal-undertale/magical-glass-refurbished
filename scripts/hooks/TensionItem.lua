@@ -1,3 +1,4 @@
+---@class TensionItem
 local TensionItem, super = HookSystem.hookScript(TensionItem)
 
 function TensionItem:onBattleSelect(user, target)

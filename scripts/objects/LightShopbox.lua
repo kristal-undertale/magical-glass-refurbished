@@ -1,3 +1,5 @@
+---@class LightShopbox : Object
+---@overload fun(...) : LightShopbox
 local LightShopbox, super = Class(Object)
 
 function LightShopbox:init()

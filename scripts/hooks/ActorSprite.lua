@@ -1,3 +1,4 @@
+---@class ActorSprite
 local ActorSprite, super = HookSystem.hookScript(ActorSprite)
 
 function ActorSprite:init(actor)

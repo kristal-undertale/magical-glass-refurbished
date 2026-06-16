@@ -1,5 +1,10 @@
+---@class LightHelpWindow : Object
+---@overload fun(...) : LightHelpWindow
 local LightHelpWindow, super = Class(Object)
 
+---@param x number
+---@param y number
+---@param top number
 function LightHelpWindow:init(x, y, top)
     super.init(self, x, y)
 
@@ -72,6 +77,7 @@ function LightHelpWindow:draw()
     super.draw(self)
 end
 
+---@param text string
 function LightHelpWindow:setDescription(text)
     local str = text:gsub('\n', ' ')
     self.description_text:setText("[shake:"..Mod.libs["magical-glass"].light_battle_shake_text.."]" .. str)

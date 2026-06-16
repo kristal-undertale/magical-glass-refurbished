@@ -1,3 +1,4 @@
+---@class WorldCutscene
 local WorldCutscene, super = HookSystem.hookScript(WorldCutscene)
 
 function WorldCutscene:init(world, group, id, ...)
@@ -24,6 +25,8 @@ function WorldCutscene:showShop()
     end
 end
 
+---@param encounter string
+---@param transition boolean
 function WorldCutscene:startLightEncounter(encounter, transition, enemy, options)
     options = options or {}
     transition = transition ~= false

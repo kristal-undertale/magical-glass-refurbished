@@ -1,3 +1,4 @@
+---@class Wave
 local Wave, super = HookSystem.hookScript(Wave)
 
 function Wave:spawnBulletTo(parent, bullet, ...)

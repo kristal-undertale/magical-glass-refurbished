@@ -1,5 +1,10 @@
+---@class ImageViewer : Sprite
+---@overload fun(...) : ImageViewer
 local ImageViewer, super = Class(Sprite)
 
+---@param sprite string
+---@param x number
+---@param y number
 function ImageViewer:init(sprite, x, y)
     super.init(self, sprite, x, y)
     
@@ -11,6 +16,7 @@ function ImageViewer:init(sprite, x, y)
     self:setScale(2)
 end
 
+---@param key string
 function ImageViewer:onKeyPressed(key)
     if Input.isConfirm(key) or Input.isCancel(key) then
         self:remove()

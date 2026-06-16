@@ -1,5 +1,26 @@
+---@class LightArena : Object
+---@field x number
+---@field y number
+---@field width number
+---@field height number
+---@field shape table
+---@field processed_shape table
+---@field color table
+---@field bg_color table
+---@field collider ColliderGroup
+---@field area_collider PolygonCollider
+---@field sprite LightArenaSprite
+---@field sprite_border LightArenaSprite
+---@field mask ArenaMask
+---@field target_shape table
+---@field target_position table
+---@field target_shape_callback function?
+---@field target_position_callback function?
+---@overload fun(...) : LightArena
 local LightArena, super = Class(Object)
 
+---@param x number
+---@param y number
 function LightArena:init(x, y, shape)
     super.init(self, x, y)
 
@@ -60,6 +81,8 @@ function LightArena:enable()
     self.sprite_border.visible = true
 end
 
+---@param width number
+---@param height number
 function LightArena:setSize(width, height)
     self:setShape{{0, 0}, {width, 0}, {width, height}, {0, height}}
 end
@@ -124,10 +147,18 @@ function LightArena:setShape(shape)
     end
 end
 
+---@param r number
+---@param g number
+---@param b number
+---@param a number
 function LightArena:setBorderColor(r, g, b, a)
     self.color = {r, g, b, a or 1}
 end
 
+---@param r number
+---@param g number
+---@param b number
+---@param a number
 function LightArena:setBackgroundColor(r, g, b, a)
     self.bg_color = {r, g, b, a or 1}
 end
@@ -243,11 +274,14 @@ function LightArena:update()
     end
 end
 
+---@param callback function
 function LightArena:changeShape(shape, callback)
     self.target_shape = shape
     self.target_shape_callback = callback
 end
 
+---@param move_soul boolean
+---@param callback function
 function LightArena:changePosition(pos, move_soul, callback)
     self.target_position = pos
     self.move_soul = move_soul ~= false

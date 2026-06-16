@@ -1,3 +1,5 @@
+---@class LightWave : Wave
+---@overload fun(...) : LightWave
 local LightWave, super = Class(Wave)
 
 function LightWave:init()
@@ -9,21 +11,29 @@ function LightWave:init()
     self.auto_clear = true
 end
 
+---@param width number
+---@param height number
 function LightWave:setArenaSize(width, height)
     self.arena_width = width
     self.arena_height = height or width
 end
 
+---@param x number
+---@param y number
 function LightWave:setArenaPosition(x, y)
     self.arena_x = x
     self.arena_y = y
 end
 
+---@param x number
+---@param y number
 function LightWave:setSoulPosition(x, y)
     self.soul_start_x = x
     self.soul_start_y = y
 end
 
+---@param x number
+---@param y number
 function LightWave:setSoulOffset(x, y)
     self.soul_offset_x = x
     self.soul_offset_y = y

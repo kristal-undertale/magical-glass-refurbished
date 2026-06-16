@@ -1,5 +1,9 @@
+---@class LightBullet : Bullet
+---@overload fun(...) : LightBullet
 local LightBullet, super = Class(Bullet)
 
+---@param x number
+---@param y number
 function LightBullet:init(x, y, texture)
     super.init(self, x, y, texture)
     

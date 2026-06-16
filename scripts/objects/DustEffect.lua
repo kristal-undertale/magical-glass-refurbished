@@ -1,5 +1,13 @@
+---@class DustEffect : Object
+---@field canvas table
+---@field height number
+---@overload fun(...) : DustEffect
 local DustEffect, super = Class(Object)
 
+---@param x number
+---@param y number
+---@param allow_black_pixels boolean
+---@param after function
 function DustEffect:init(texture, x, y, allow_black_pixels, after)
     super.init(self, x, y)
 

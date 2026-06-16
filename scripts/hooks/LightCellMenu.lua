@@ -1,3 +1,4 @@
+---@class LightCellMenu
 local LightCellMenu, super = HookSystem.hookScript(LightCellMenu)
 
 function LightCellMenu:runCall(call)

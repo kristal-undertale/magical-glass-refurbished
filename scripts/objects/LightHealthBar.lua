@@ -1,3 +1,5 @@
+---@class LightHealthBar : Object
+---@overload fun(...) : LightHealthBar
 local LightHealthBar, super = Class(Object)
 
 function LightHealthBar:init()

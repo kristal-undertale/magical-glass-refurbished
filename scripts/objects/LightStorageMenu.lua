@@ -1,3 +1,5 @@
+---@class LightStorageMenu : Object
+---@overload fun(...) : LightStorageMenu
 local LightStorageMenu, super = Class(Object)
 
 function LightStorageMenu:init(left_storage, right_storage)
@@ -34,6 +36,7 @@ function LightStorageMenu:getLimit(list)
     return 10
 end
 
+---@param key string
 function LightStorageMenu:onKeyPressed(key)
     local function getEndRow() return math.min(math.max(1, self:getLimit(self.list), #self:getStorage(self.list) + (#self:getStorage(self.list) >= self:getLimit(self.list) and 1 or 0)), self:getStorage(self.list).max) end
     local function bottomRow() return math.min(self:getStorage(self.list).max, self.scroll_y[self.list] + (self:getLimit(self.list) - 1)) end

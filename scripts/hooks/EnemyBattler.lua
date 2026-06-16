@@ -1,3 +1,4 @@
+---@class EnemyBattler
 local EnemyBattler, super = HookSystem.hookScript(EnemyBattler)
 
 function EnemyBattler:init(actor, use_overlay)
@@ -74,6 +75,7 @@ function EnemyBattler:onDefeat(damage, battler)
     end
 end
 
+---@param damage number
 function EnemyBattler:onDefeatVaporized(damage, battler)
     self.hurt_timer = -1
 

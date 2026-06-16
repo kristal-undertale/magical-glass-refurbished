@@ -9,6 +9,7 @@
 ---@field fast_transition boolean? Whether the soul transition should be sped up. Useful for world hazard encounters.
 ---
 ---@field background (boolean|string)? Whether the default grid background is drawn.
+---@field show_battle_ui boolean Whether event/cutscene encounters should still draw the full battle HUD.
 ---@field music string? The music used for this encounter.
 ---@field default_xactions boolean? Whether party members have the X-Action option in their spell menu.
 ---
@@ -121,9 +122,12 @@ end
 function LightEncounter:onFlee() end
 function LightEncounter:onFleeFail() end
 
+---@param reason string
 function LightEncounter:beforeStateChange(old, new, reason) end
+---@param reason string
 function LightEncounter:onStateChange(old, new, reason) end
 
+---@param button string
 function LightEncounter:onActionSelect(battler, button) end
 
 function LightEncounter:onMenuSelect(state_reason, item, can_select) end
@@ -140,14 +144,21 @@ function LightEncounter:onReturnToWorld(events) end
 
 function LightEncounter:getDialogueCutscene() end
 
+---@param money number
 function LightEncounter:getVictoryMoney(money) end
+---@param xp number
 function LightEncounter:getVictoryXP(xp) end
+---@param text string
+---@param money number
+---@param xp number
 function LightEncounter:getVictoryText(text, money, xp) end
 
 function LightEncounter:update() end
 
 function LightEncounter:draw() end
 
+---@param x number
+---@param y number
 function LightEncounter:addEnemy(enemy, x, y, ...)
     local enemy_obj
     if type(enemy) == "string" then
@@ -260,18 +271,26 @@ function LightEncounter:getDefeatedEnemies()
     return self.defeated_enemies or Game.battle.defeated_enemies
 end
 
+---@param x number
+---@param y number
 function LightEncounter:createSoul(x, y, color)
     return LightSoul(x, y, color)
 end
 
+---@param flag string
+---@param value number
 function LightEncounter:setFlag(flag, value)
     Game:setFlag("lightencounter#"..self.id..":"..flag, value)
 end
 
+---@param flag string
+---@param default boolean
 function LightEncounter:getFlag(flag, default)
     return Game:getFlag("lightencounter#"..self.id..":"..flag, default)
 end
 
+---@param flag string
+---@param amount number
 function LightEncounter:addFlag(flag, amount)
     return Game:addFlag("lightencounter#"..self.id..":"..flag, amount)
 end

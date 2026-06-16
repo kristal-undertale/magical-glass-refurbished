@@ -1,3 +1,11 @@
+---@class PartyBattler
+---@field already_has_flee_button boolean
+---@field flee_button FleeButton?
+---@field karma number Current KR damage.
+---@field karma_timer number
+---@field karma_bonus number
+---@field inv_bonus number
+---@field prev_health number
 local PartyBattler, super = HookSystem.hookScript(PartyBattler)
 
 function PartyBattler:init(chara, x, y)
@@ -24,6 +32,7 @@ function PartyBattler:canTarget()
     end
 end
 
+---@param amount number
 function PartyBattler:addKarma(amount)
     self.karma = self.karma + amount
 end

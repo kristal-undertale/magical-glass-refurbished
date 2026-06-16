@@ -1,3 +1,5 @@
+---@class LightBattleUI : Object
+---@overload fun(...) : LightBattleUI
 local LightBattleUI, super = Class(Object)
 
 function LightBattleUI:init()

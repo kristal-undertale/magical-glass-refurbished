@@ -1,10 +1,12 @@
-local FleeButton, super = Class(LightActionButton)
+---@class SaveButton : LightActionButton
+---@overload fun(...) : SaveButton
+local SaveButton, super = Class(LightActionButton)
 
-function FleeButton:init()
+function SaveButton:init()
     super.init(self, "save")
 end
 
-function FleeButton:update()
+function SaveButton:update()
     super.update(self)
     
     if not self.disabled then
@@ -12,4 +14,4 @@ function FleeButton:update()
     end
 end
 
-return FleeButton
+return SaveButton

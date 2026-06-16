@@ -1,5 +1,9 @@
+---@class LightAttackBox : Object
+---@overload fun(...) : LightAttackBox
 local LightAttackBox, super = Class(Object)
 
+---@param x number
+---@param y number
 function LightAttackBox:init(x, y)
     super.init(self, x, y)
 

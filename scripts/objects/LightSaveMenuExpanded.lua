@@ -1,3 +1,5 @@
+---@class LightSaveMenuExpanded : Object
+---@overload fun(...) : LightSaveMenuExpanded
 local LightSaveMenuExpanded, super = Class(Object)
 
 function LightSaveMenuExpanded:init(marker)
@@ -318,6 +320,10 @@ function LightSaveMenuExpanded:draw()
     end
 end
 
+---@param index number
+---@param x number
+---@param y number
+---@param selected boolean
 function LightSaveMenuExpanded:drawSaveFile(index, data, x, y, selected, header)
     if self.saved_file then
         if self.saved_file == index then

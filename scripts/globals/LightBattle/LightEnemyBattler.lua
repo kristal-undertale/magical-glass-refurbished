@@ -1,3 +1,5 @@
+---@class LightEnemyBattler : Object
+---@overload fun(...) : LightEnemyBattler
 local LightEnemyBattler, super = Class(Object)
 
 function LightEnemyBattler:init(actor, use_overlay)
@@ -153,6 +155,7 @@ function LightEnemyBattler:getGrazeTension()
     return self.graze_tension
 end
 
+---@param reset boolean
 function LightEnemyBattler:toggleOverlay(overlay, reset)
     if overlay == nil then
         overlay = self.sprite.visible
@@ -176,6 +179,7 @@ function LightEnemyBattler:getGaugeSize()
 end
 function LightEnemyBattler:getDamageOffset() return self.damage_offset end
 
+---@param hide_message boolean
 function LightEnemyBattler:setTired(bool, hide_message)
     local old_tired = self.tired
     self.tired = bool
@@ -194,6 +198,8 @@ function LightEnemyBattler:setTired(bool, hide_message)
     end
 end
 
+---@param name string
+---@param tp number
 function LightEnemyBattler:registerAct(name, description, party, tp, icons)
     if type(party) == "string" then
         if party == "all" then
@@ -224,6 +230,8 @@ function LightEnemyBattler:registerAct(name, description, party, tp, icons)
     return act
 end
 
+---@param name string
+---@param tp number
 function LightEnemyBattler:registerShortAct(name, description, party, tp, icons)
     if type(party) == "string" then
         if party == "all" then
@@ -254,6 +262,8 @@ function LightEnemyBattler:registerShortAct(name, description, party, tp, icons)
     return act
 end
 
+---@param name string
+---@param tp number
 function LightEnemyBattler:registerActFor(char, name, description, party, tp, icons)
     if type(party) == "string" then
         if party == "all" then
@@ -277,6 +287,8 @@ function LightEnemyBattler:registerActFor(char, name, description, party, tp, ic
     table.insert(self.acts, act)
 end
 
+---@param name string
+---@param tp number
 function LightEnemyBattler:registerShortActFor(char, name, description, party, tp, icons)
     if type(party) == "string" then
         if party == "all" then
@@ -300,6 +312,7 @@ function LightEnemyBattler:registerShortActFor(char, name, description, party, t
     table.insert(self.acts, act)
 end
 
+---@param name string
 function LightEnemyBattler:removeAct(name)
     for i, act in ipairs(self.acts) do
         if act.name == name then
@@ -309,6 +322,7 @@ function LightEnemyBattler:removeAct(name)
     end
 end
 
+---@param pacify boolean
 function LightEnemyBattler:spare(pacify)
     if self.exit_on_defeat then
         self:toggleOverlay(true)
@@ -341,6 +355,7 @@ function LightEnemyBattler:spare(pacify)
     self:onSpared()
 end
 
+---@param success boolean
 function LightEnemyBattler:getSpareText(battler, success)
     if success then
         return "* " .. battler.chara:getNameOrYou() .. " spared " .. self.name .. "."
@@ -390,6 +405,7 @@ end
 
 function LightEnemyBattler:onSpareable() end
 
+---@param amount number
 function LightEnemyBattler:addMercy(amount)
     if Kristal.getLibConfig("magical-glass", "mercy_messages") then
         if amount == 0 then
@@ -426,6 +442,10 @@ function LightEnemyBattler:addMercy(amount)
     end
 end
 
+---@param amount number
+---@param play_sound boolean
+---@param clamp boolean
+---@param kill_condition function
 function LightEnemyBattler:addTemporaryMercy(amount, play_sound, clamp, kill_condition)
     kill_condition = kill_condition or function()
         return Game.battle.state ~= "DEFENDING" and Game.battle.state ~= "DEFENDINGEND"
@@ -505,6 +525,9 @@ function LightEnemyBattler:onMercy(battler)
     end
 end
 
+---@param sprite string
+---@param offset_x number
+---@param offset_y number
 function LightEnemyBattler:flash(sprite, offset_x, offset_y, layer)
     local sprite_to_use = sprite or self.sprite
     return sprite_to_use:flash(offset_x, offset_y, layer)
@@ -608,8 +631,10 @@ function LightEnemyBattler:selectMenuWave()
 end
 
 function LightEnemyBattler:onCheck(battler) end
+---@param name string
 function LightEnemyBattler:onActStart(battler, name) end
 
+---@param name string
 function LightEnemyBattler:onAct(battler, name)
     if name == "Check" then
         self:onCheck(battler)
@@ -630,11 +655,13 @@ function LightEnemyBattler:onAct(battler, name)
     end
 end
 
+---@param name string
 function LightEnemyBattler:onShortAct(battler, name) end
 
 function LightEnemyBattler:onTurnStart() end
 function LightEnemyBattler:onTurnEnd() end
 
+---@param name string
 function LightEnemyBattler:getAct(name)
     for _, act in ipairs(self.acts) do
         if act.name == name then
@@ -651,6 +678,9 @@ function LightEnemyBattler:isXActionShort(battler)
     return false
 end
 
+---@param amount number
+---@param on_defeat function
+---@param attacked boolean
 function LightEnemyBattler:hurt(amount, battler, on_defeat, color, anim, show_status, attacked)
     if self.defeated then
         return
@@ -703,9 +733,12 @@ function LightEnemyBattler:hurt(amount, battler, on_defeat, color, anim, show_st
     self:checkHealth(on_defeat, amount, battler)
 end
 
+---@param attacked boolean
 function LightEnemyBattler:onDodge(battler, attacked) end
 function LightEnemyBattler:onBlock(battler) end
 
+---@param on_defeat function
+---@param amount number
 function LightEnemyBattler:checkHealth(on_defeat, amount, battler)
     -- on_defeat is optional
     if self.health <= 0 then
@@ -724,10 +757,15 @@ function LightEnemyBattler:checkHealth(on_defeat, amount, battler)
     end
 end
 
+---@param amount number
 function LightEnemyBattler:forceDefeat(amount, battler)
     self:onDefeat(amount, battler)
 end
 
+---@param damage number
+---@param lane number
+---@param points number
+---@param stretch number
 function LightEnemyBattler:getAttackDamage(damage, lane, points, stretch)
     local crit = false
     local total_damage
@@ -838,6 +876,7 @@ end
 function LightEnemyBattler:getDamageSound() end
 function LightEnemyBattler:getDamageVoice() end
 
+---@param amount number
 function LightEnemyBattler:getAttackTension(amount)
     if Game.battle:hasReducedTension() then
         return (amount / 3) * 1
@@ -845,6 +884,7 @@ function LightEnemyBattler:getAttackTension(amount)
     return amount * 1
 end
 
+---@param damage number
 function LightEnemyBattler:onHurt(damage, battler)
     self.hurt_timer = 1
     self:toggleOverlay(true)
@@ -892,6 +932,7 @@ function LightEnemyBattler:onHurtEnd()
     end
 end
 
+---@param damage number
 function LightEnemyBattler:onDefeat(damage, battler)
     if self.exit_on_defeat then
         Game.battle.timer:after(self.hurt_timer, function()
@@ -921,6 +962,7 @@ function LightEnemyBattler:onDefeat(damage, battler)
     end
 end
 
+---@param damage number
 function LightEnemyBattler:onDefeatRun(damage, battler)
     self.hurt_timer = -1
 
@@ -944,6 +986,7 @@ function LightEnemyBattler:onDefeatRun(damage, battler)
     self:defeat("VIOLENCED", true)
 end
 
+---@param damage number
 function LightEnemyBattler:onDefeatVaporized(damage, battler)
     self.hurt_timer = -1
 
@@ -968,6 +1011,7 @@ function LightEnemyBattler:onDefeatVaporized(damage, battler)
     self:defeat("KILLED", true)
 end
 
+---@param damage number
 function LightEnemyBattler:onDefeatFatal(damage, battler)
     self.hurt_timer = -1
 
@@ -987,6 +1031,7 @@ function LightEnemyBattler:onDefeatFatal(damage, battler)
     self:defeat("KILLED", true)
 end
 
+---@param amount number
 function LightEnemyBattler:heal(amount)
     Mod.libs["magical-glass"].heal_amount = amount
     Assets.stopAndPlaySound("power")
@@ -1047,6 +1092,7 @@ function LightEnemyBattler:isRecruitable()
     return Game:getLightRecruit(self.id)
 end
 
+---@param type string
 function LightEnemyBattler:lightStatusMessage(type, arg, color, kill)
     local x, y = self:getRelativePos(self.width/2, self.height/2 - 10)
     
@@ -1094,6 +1140,7 @@ function LightEnemyBattler:lightStatusMessage(type, arg, color, kill)
     return percent
 end
 
+---@param text string
 function LightEnemyBattler:spawnSpeechBubble(text, options)
     options = options or {}
     if options["right"] == nil then
@@ -1130,6 +1177,8 @@ end
 function LightEnemyBattler:onBubbleSpawn(bubble) end
 function LightEnemyBattler:onBubbleRemove(bubble) end
 
+---@param reason string
+---@param violent boolean
 function LightEnemyBattler:defeat(reason, violent)
     self.done_state = reason or "DEFEATED"
     
@@ -1213,6 +1262,8 @@ function LightEnemyBattler:setActor(actor, use_overlay)
     end
 end
 
+---@param animation string
+---@param callback function
 function LightEnemyBattler:setAnimation(animation, callback)
     return self.sprite:setAnimation(animation, callback)
 end
@@ -1225,6 +1276,10 @@ function LightEnemyBattler:getActiveSprite()
     end
 end
 
+---@param sprite string
+---@param speed number
+---@param loop boolean
+---@param after function
 function LightEnemyBattler:setCustomSprite(sprite, ox, oy, speed, loop, after)
     self.sprite:setCustomSprite(sprite, ox, oy)
     if not self.sprite.directional and speed then
@@ -1232,6 +1287,10 @@ function LightEnemyBattler:setCustomSprite(sprite, ox, oy, speed, loop, after)
     end
 end
 
+---@param sprite string
+---@param speed number
+---@param loop boolean
+---@param after function
 function LightEnemyBattler:setSprite(sprite, speed, loop, after)
     if not self.sprite then
         self.sprite = Sprite(sprite)
@@ -1244,6 +1303,7 @@ function LightEnemyBattler:setSprite(sprite, speed, loop, after)
     end
 end
 
+---@param part string
 function LightEnemyBattler:getSpritePart(part, parent)
     return self.sprite:getPart(part, parent)
 end
@@ -1304,14 +1364,20 @@ function LightEnemyBattler:canDeepCopy()
     return false
 end
 
+---@param flag string
+---@param value number
 function LightEnemyBattler:setFlag(flag, value)
     Game:setFlag("lightenemy#"..self.id..":"..flag, value)
 end
 
+---@param flag string
+---@param default boolean
 function LightEnemyBattler:getFlag(flag, default)
     return Game:getFlag("lightenemy#"..self.id..":"..flag, default)
 end
 
+---@param flag string
+---@param amount number
 function LightEnemyBattler:addFlag(flag, amount)
     return Game:addFlag("lightenemy#"..self.id..":"..flag, amount)
 end

@@ -1,5 +1,11 @@
+---@class LightGauge : Object
+---@overload fun(...) : LightGauge
 local LightGauge, super = Class(Object)
 
+---@param type string
+---@param amount number
+---@param x number
+---@param y number
 function LightGauge:init(type, amount, x, y, enemy, color)
     super.init(self, x, y)
 

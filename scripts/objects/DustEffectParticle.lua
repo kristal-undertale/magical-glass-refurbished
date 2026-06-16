@@ -1,5 +1,9 @@
+---@class DustEffectParticle : Object
+---@overload fun(...) : DustEffectParticle
 local DustEffectParticle, super = Class(Object, "DustEffectParticle")
 
+---@param x number
+---@param y number
 function DustEffectParticle:init(color, x, y)
     super.init(self, x, y)
 

@@ -1,5 +1,9 @@
+---@class LightDamageNumber : Object
+---@overload fun(...) : LightDamageNumber
 local LightDamageNumber, super = Class(Object)
 
+---@param x number
+---@param y number
 function LightDamageNumber:init(msg_type, arg, x, y, color, enemy)
     super.init(self, x, y)
     

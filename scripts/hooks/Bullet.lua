@@ -1,3 +1,10 @@
+---@class Bullet
+---@field type string Bullet interaction type.
+---@field inv_timer number
+---@field heal_amount number
+---@field destroy_on_hit boolean
+---@field remove_on_arena_collision boolean
+---@field green_deflect_collider Collider?
 local Bullet, super = HookSystem.hookScript(Bullet)
 
 function Bullet:init(x, y, texture)
@@ -35,6 +42,7 @@ function Bullet:getType()
     return self.type
 end
 
+---@param type string
 function Bullet:setType(type)
     self.type = type
 
@@ -126,6 +134,7 @@ function Bullet:onGreenDeflect(crit)
 end
 
 -- Yellow soul
+---@param damage number
 function Bullet:onYellowShot(shot, damage) end
 
 return Bullet

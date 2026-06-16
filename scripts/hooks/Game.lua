@@ -1,3 +1,4 @@
+---@class Game
 local Game, super = HookSystem.hookScript(Game)
 
 function Game:enterShop(shop, options, light)
@@ -55,6 +56,8 @@ function Game:encounter(encounter, transition, enemy, context, light)
     end
 end
 
+---@param encounter string
+---@param transition boolean
 function Game:encounterLight(encounter, transition, enemy, context)
     Mod.libs["magical-glass"].current_battle_system = "undertale"
 
@@ -101,6 +104,7 @@ function Game:initRecruits()
     end
 end
 
+---@param id string
 function Game:getLightRecruit(id)
     if self.light_recruits_data[id] then
         return self.light_recruits_data[id]
@@ -119,6 +123,8 @@ function Game:getAnyRecruitFromRecruitData(recruit)
     end
 end
 
+---@param include_incomplete boolean
+---@param include_hidden boolean
 function Game:getLightRecruits(include_incomplete, include_hidden)
     local recruits = {}
     for id, recruit in pairs(self.light_recruits_data) do
@@ -131,6 +137,8 @@ function Game:getLightRecruits(include_incomplete, include_hidden)
     return recruits
 end
 
+---@param include_incomplete boolean
+---@param include_hidden boolean
 function Game:getAllRecruits(include_incomplete, include_hidden)
     local recruits = TableUtils.merge(self:getRecruits(include_incomplete, include_hidden), self:getLightRecruits(include_incomplete, include_hidden), true)
     table.sort(recruits, function(a, b) return a.index < b.index end)

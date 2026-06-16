@@ -1,3 +1,5 @@
+---@class ActionBox
+---@field hp_karma_sprite boolean
 local ActionBox, super = HookSystem.hookScript(ActionBox)
 
 function ActionBox:init(x, y, index, battler)

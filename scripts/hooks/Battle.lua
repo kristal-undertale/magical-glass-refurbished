@@ -1,3 +1,4 @@
+---@class Battle
 local Battle, super = HookSystem.hookScript(Battle)
 
 function Battle:init()
@@ -47,6 +48,8 @@ function Battle:update()
     super.update(self)
 end
 
+---@param amount number
+---@param force boolean
 function Battle:heal(amount, force, target)
     self.heal_target = force and "force" or true
 

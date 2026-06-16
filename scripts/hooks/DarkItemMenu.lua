@@ -1,3 +1,4 @@
+---@class DarkItemMenu
 local DarkItemMenu, super = HookSystem.hookScript(DarkItemMenu)
 
 function DarkItemMenu:init()

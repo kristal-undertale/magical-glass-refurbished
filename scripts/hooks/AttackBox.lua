@@ -1,3 +1,4 @@
+---@class AttackBox
 local AttackBox, super = HookSystem.hookScript(AttackBox)
 
 function AttackBox:init(battler, offset, index, x, y)

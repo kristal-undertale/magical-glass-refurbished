@@ -1,3 +1,4 @@
+---@class RecruitMenu
 local RecruitMenu, super = HookSystem.hookScript(RecruitMenu)
 
 function RecruitMenu:init()

@@ -1,3 +1,4 @@
+---@class Encounter
 local Encounter, super = HookSystem.hookScript(Encounter)
 
 function Encounter:init()

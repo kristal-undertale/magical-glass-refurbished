@@ -1,3 +1,4 @@
+---@class LightMenu
 local LightMenu, super = HookSystem.hookScript(LightMenu)
 
 function LightMenu:draw()

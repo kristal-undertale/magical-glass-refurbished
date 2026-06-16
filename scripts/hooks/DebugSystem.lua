@@ -1,3 +1,4 @@
+---@class DebugSystem
 local DebugSystem, super = HookSystem.hookScript(DebugSystem)
 
 function DebugSystem:init()

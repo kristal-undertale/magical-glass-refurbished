@@ -1,8 +1,22 @@
 ---@diagnostic disable: undefined-field, inject-field
 ---@class UnderPlayer : Player
+---@field force_walk boolean Whether the player is forced to walk instead of run.
+---@field moving boolean
+---@field was_moving boolean
+---@field moved boolean
+---@field moving_x number
+---@field moving_y number
+---@field step_accum number
+---@field _uw_walk_frame integer
+---@field slope_blocked boolean
+---@field on_slope boolean
+---@field xprevious number
+---@field yprevious number
 local UnderPlayer, super = Class(Player)
 
 -- this is basically a complete rewrite atp 💔
+---@param x number
+---@param y number
 function UnderPlayer:init(chara, x, y)
     super.init(self, chara, x, y)
 
@@ -22,6 +36,10 @@ function UnderPlayer:init(chara, x, y)
 end
 
 --- get the direction the player is sliding to
+---@param slope_dir string
+---@param facing string
+---@return number x
+---@return number y
 function UnderPlayer:getSlideDirection(slope_dir, facing)
     if slope_dir == "sdr" then
         if facing == "right" then return 1, -1 end
@@ -48,6 +66,12 @@ function UnderPlayer:getSlideDirection(slope_dir, facing)
 end
 
 --- check if player is colliding with a slope and wall
+---@param slope_dir string
+---@param left boolean
+---@param up boolean
+---@param right boolean
+---@param down boolean
+---@return boolean
 function UnderPlayer:checkSlopeConflict(slope_dir, left, up, right, down)
     if slope_dir == "sul" or slope_dir == "sdr" then
         return (right and down) or (up and left)

@@ -1,3 +1,110 @@
+---@class LightBattle : Object
+---@field attack_done boolean
+---@field auto_attack_timer number
+---@field auto_attacker_index number
+---@field background_fade_alpha number
+---@field battletext_index number
+---@field battletext_table table
+---@field cancel_attack boolean
+---@field current_action_index number
+---@field current_action_processing number
+---@field current_menu_columns number
+---@field current_menu_rows number
+---@field current_menu_x number
+---@field current_menu_y number
+---@field current_selecting number
+---@field darkify_fader Fader
+---@field ended boolean
+---@field enemyselect_cursor_memory table
+---@field finished_menu_waves boolean
+---@field finished_waves boolean
+---@field has_acted boolean
+---@field heal_target boolean
+---@field last_button_type string
+---@field menu_items table
+---@field menu_wave_length number
+---@field menu_wave_timer number
+---@field menuselect_cursor_memory table
+---@field multi_mode string
+---@field offset number
+---@field pager_menus table
+---@field partyselect_cursor_memory table
+---@field post_battletext_state string
+---@field processed_action table
+---@field processing_action boolean
+---@field seen_encounter_text boolean
+---@field selected_enemy number
+---@field selected_item boolean
+---@field selected_spell boolean
+---@field selected_xaction boolean
+---@field should_finish_action boolean
+---@field started boolean
+---@field textbox_timer number
+---@field transitioned boolean
+---@field update_child_list boolean
+---@field use_textbox_timer boolean
+---@field wave_length number
+---@field wave_timer number
+---@field xactions table
+---
+---@field light                     boolean                         Whether this battle is using the light battle system.
+---@field party                     LightPartyBattler[]             Party battlers currently participating in the battle.
+---
+---@field money                     integer                         Current victory money.
+---@field xp                        number                          Current victory EXP.
+---@field used_violence             boolean                         Whether any enemy was defeated violently.
+---
+---@field ui_move                   Sound                           Shared battle UI move sound.
+---@field ui_select                 Sound                           Shared battle UI select sound.
+---@field spare_sound               Sound                           Shared vaporize/spare sound.
+---
+---@field state                     string
+---@field substate                  string
+---@field state_reason              string?                         Optional reason for the current state.
+---@field substate_reason           string?                         Optional reason for the current substate.
+---
+---@field encounter                 LightEncounter                  Encounter currently driving the battle.
+---@field encounter_context         ChaserEnemy?                    World object or enemy that initiated the battle, if any.
+---@field enemy_world_characters    table<LightEnemyBattler, Character>
+---
+---@field camera                    Camera
+---@field cutscene                  BattleCutscene?                 Active battle cutscene, if any.
+---@field battle_ui                 LightBattleUI
+---@field tension_bar               LightTensionBar
+---@field background                BattleBackground?
+---@field fader                     Fader
+---@field mask                      ArenaMask
+---@field timer                     Timer
+---
+---@field arena                     LightArena?
+---@field soul                      LightSoul?
+---@field transition_soul           LightSoul?
+---@field music                     Music
+---
+---@field attackers                 LightPartyBattler[]
+---@field normal_attackers          LightPartyBattler[]
+---@field auto_attackers            LightPartyBattler[]
+---@field enemies                   LightEnemyBattler[]
+---@field enemies_index             LightEnemyBattler|false[]
+---@field enemy_dialogue            SpeechBubble[]
+---@field enemies_to_remove         LightEnemyBattler[]
+---@field defeated_enemies          LightEnemyBattler[]
+---@field waves                     LightWave[]
+---@field menu_waves                LightWave[]
+---
+---@field current_actions           table[]
+---@field short_actions             table[]
+---@field character_actions         table<string, table[]>
+---@field selected_character_stack  table[]
+---@field selected_action_stack     table[]
+---
+---@field turn_count                integer
+---@field tension                   number|false
+---@field soul_speed                number
+---@field forced_victory            boolean
+---@field debug_wave                boolean
+---@field resume_world_music        boolean
+---@overload fun(...) : LightBattle
 local LightBattle, super = Class(Object)
 
 function LightBattle:init()
@@ -179,6 +286,8 @@ function LightBattle:createPartyBattlers()
     end
 end
 
+---@param state string
+---@param encounter string
 function LightBattle:postInit(state, encounter)
     local check_encounter
     if type(encounter) == "string" then
@@ -272,6 +381,8 @@ function LightBattle:isWorldHidden()
     return true
 end
 
+---@param x number
+---@param y number
 function LightBattle:spawnSoul(x, y)
     local bx, by = self:getSoulLocation()
     x = x or bx
@@ -322,6 +433,8 @@ function LightBattle:getSoulLocation(always_player)
     end
 end
 
+---@param state string
+---@param reason string
 function LightBattle:setState(state, reason)
     local old = self.state
     
@@ -335,6 +448,8 @@ function LightBattle:setState(state, reason)
     self:onStateChange(old, self.state, reason)
 end
 
+---@param state string
+---@param reason string
 function LightBattle:setSubState(state, reason)
     local old = self.substate
     self.substate = state
@@ -346,6 +461,7 @@ function LightBattle:getState()
     return self.state
 end
 
+---@param transition boolean
 function LightBattle:onSoulTransition(transition)
     if transition then
         local main_chara = Game:getSoulPartyMember()
@@ -499,18 +615,21 @@ function LightBattle:setBattleState()
     self.encounter:onBattleStart()
 end
 
+---@param index number
 function LightBattle:_getEnemyByIndex(index)
     local enemy = self.enemies_index[index]
     if not enemy then return nil end
     return enemy
 end
 
+---@param index number
 function LightBattle:_isEnemyByIndexSelectable(index)
     local enemy = self:_getEnemyByIndex(index)
     if not enemy then return false end
     return enemy.selectable
 end
 
+---@param reason string
 function LightBattle:checkEndWaves(old, new, reason)
     local normal_arena_state = {"DEFENDINGEND", "TRANSITIONOUT", "ACTIONSELECT", "VICTORY", "INTRO", "ACTIONS", "ENEMYSELECT", "PARTYSELECT", "MENUSELECT", "ATTACKING", "FLEEING", "FLEEFAIL", "BUTNOBODYCAME"}
 
@@ -550,8 +669,11 @@ function LightBattle:checkEndWaves(old, new, reason)
     end
 end
 
+---@param reason string
 function LightBattle:onSubStateChange(old, new, reason) end
 
+---@param name string
+---@param tp number
 function LightBattle:registerXAction(party, name, description, tp)
     local act = {
         ["name"] = name,
@@ -622,6 +744,7 @@ function LightBattle:processActionGroup(group)
     end
 end
 
+---@param force boolean
 function LightBattle:tryProcessNextAction(force)
     if self.state == "ACTIONS" and not self.processing_action then
         if #self.current_actions == 0 then
@@ -1029,6 +1152,7 @@ function LightBattle:finishAction(action)
     end
 end
 
+---@param reason string
 function LightBattle:onStateChange(old, new, reason)
     if new == "ACTIONSELECT" then
         self:onActionSelectState()
@@ -1865,6 +1989,8 @@ function LightBattle:returnToWorld()
     Mod.libs["magical-glass"].current_battle_system = nil
 end
 
+---@param text string
+---@param dont_finish boolean
 function LightBattle:setActText(text, dont_finish)
     self:battleText(text, function()
         if not dont_finish then
@@ -1898,6 +2024,7 @@ function LightBattle:resetParty()
     end
 end
 
+---@param text string
 function LightBattle:shortActText(text)
     self:setState("SHORTACTTEXT")
     self.battle_ui:clearEncounterText()
@@ -1926,6 +2053,8 @@ function LightBattle:checkGameOver()
     Game:gameOver(self:getSoulLocation())
 end
 
+---@param text string
+---@param post_func function
 function LightBattle:battleText(text,post_func)
     local target_state = self:getState()
     self.battle_ui.encounter_text.text.line_offset = 4 -- accuracy thing
@@ -1952,10 +2081,12 @@ function LightBattle:battleText(text,post_func)
     self:setState("BATTLETEXT")
 end
 
+---@param text string
 function LightBattle:infoText(text)
     self.battle_ui.encounter_text:setText("[shake:"..Mod.libs["magical-glass"].light_battle_shake_text.."]" .. text or "")
 end
 
+---@param instant boolean
 function LightBattle:setEncounterText(options, instant)
     self.battle_ui:clearEncounterText()
 
@@ -1987,6 +2118,7 @@ function LightBattle:hasCutscene()
     return self.cutscene and not self.cutscene.ended
 end
 
+---@param id string
 function LightBattle:startCutscene(group, id, ...)
     if self.cutscene then
         local cutscene_name = ""
@@ -2004,6 +2136,8 @@ function LightBattle:startCutscene(group, id, ...)
     return self.cutscene
 end
 
+---@param id string
+---@param dont_finish boolean
 function LightBattle:startActCutscene(group, id, dont_finish)
     local action = self:getCurrentAction()
     local cutscene
@@ -2253,6 +2387,9 @@ function LightBattle:updateChildren()
     end
 end
 
+---@param sprite string
+---@param x number
+---@param y number
 function LightBattle:shakeAttackSprite(sprite, x, y)
     if x == nil then
         x = 4
@@ -2488,6 +2625,8 @@ function LightBattle:pushForcedAction(battler, action, target, data, extra)
     self:pushAction(action, target, data, self:getPartyIndex(battler.chara.id), extra)
 end
 
+---@param action_type string
+---@param character_id string
 function LightBattle:pushAction(action_type, target, data, character_id, extra)
     character_id = character_id or self.current_selecting
 
@@ -2508,6 +2647,7 @@ function LightBattle:pushAction(action_type, target, data, character_id, extra)
     end
 end
 
+---@param action_type string
 function LightBattle:commitAction(battler, action_type, target, data, extra)
     data = data or {}
     extra = extra or {}
@@ -2649,6 +2789,7 @@ function LightBattle:commitSingleAction(action)
     end
 end
 
+---@param character_id string
 function LightBattle:removeAction(character_id)
     local action = self.character_actions[character_id]
 
@@ -2741,6 +2882,7 @@ function LightBattle:getEnemyFromCharacter(chara)
     end
 end
 
+---@param character_id string
 function LightBattle:hasAction(character_id)
     return self.character_actions[character_id] ~= nil
 end
@@ -2765,6 +2907,9 @@ function LightBattle:resetEnemiesIndex(reset_xact)
     end
 end
 
+---@param x number
+---@param y number
+---@param friction number
 function LightBattle:shakeCamera(x, y, friction)
     self.camera:shake(x, y, friction)
 end
@@ -2861,6 +3006,9 @@ function LightBattle:getPartyFromTarget(target)
     end
 end
 
+---@param amount number
+---@param exact boolean
+---@param swoon boolean
 function LightBattle:hurt(amount, exact, target, swoon)
     -- If target is a numberic value, it will hurt the party battler with that index
     -- "ANY" will choose the target randomly
@@ -2935,6 +3083,8 @@ function LightBattle:hurt(amount, exact, target, swoon)
     end
 end
 
+---@param amount number
+---@param force boolean
 function LightBattle:heal(amount, force, target)
     self.heal_target = force and "force" or true
     
@@ -3011,6 +3161,7 @@ function LightBattle:clearMenuWaves()
     self.menu_waves = {}
 end
 
+---@param allow_duplicates boolean
 function LightBattle:setWaves(waves, allow_duplicates)
     self:clearWaves()
     self:clearMenuWaves()
@@ -3041,6 +3192,7 @@ function LightBattle:setWaves(waves, allow_duplicates)
     return self.waves
 end
 
+---@param allow_duplicates boolean
 function LightBattle:setMenuWaves(waves, allow_duplicates)
     self:clearWaves()
     self:clearMenuWaves()
@@ -3078,6 +3230,7 @@ function LightBattle:startProcessing()
     end
 end
 
+---@param index number
 function LightBattle:setSelectedParty(index)
     self.current_selecting = index or 0
 end
@@ -3248,6 +3401,7 @@ function LightBattle:removeEnemy(enemy, defeated)
     end
 end
 
+---@param id string
 function LightBattle:parseEnemyIdentifier(id)
     local args = StringUtils.split(id, ":")
     local enemies = TableUtils.filter(self.enemies, function(enemy) return enemy.id == args[1] end)
@@ -3277,6 +3431,7 @@ function LightBattle:addMenuItem(tbl)
     table.insert(self.menu_items, tbl)
 end
 
+---@param key string
 function LightBattle:onKeyPressed(key)
     if Kristal.Config["debug"] and Input.ctrl() then
         if key == "h" then
@@ -3649,6 +3804,7 @@ function LightBattle:getDefendTension(battler)
     return self.encounter:getDefendTension(battler)
 end
 
+---@param key string
 function LightBattle:handleActionSelectInput(key)
     if not self.encounter.event then
         local actbox = self.battle_ui.action_boxes[self.current_selecting]
@@ -3696,6 +3852,7 @@ function LightBattle:handleActionSelectInput(key)
     end
 end
 
+---@param key string
 function LightBattle:handleAttackingInput(key)
     if Input.isConfirm(key) then
         if not self.attack_done and not self.cancel_attack and self.battle_ui.attack_box then
@@ -3798,6 +3955,9 @@ function LightBattle:updateShortActText()
     end
 end
 
+---@param string string
+---@param x number
+---@param y number
 function LightBattle:debugPrintOutline(string, x, y, color)
     color = color or {love.graphics.getColor()}
     Draw.setColor(0, 0, 0, 1)

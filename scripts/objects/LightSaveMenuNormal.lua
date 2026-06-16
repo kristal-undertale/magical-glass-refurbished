@@ -1,3 +1,5 @@
+---@class LightSaveMenuNormal : Object
+---@overload fun(...) : LightSaveMenuNormal
 local LightSaveMenuNormal, super = Class(Object)
 
 function LightSaveMenuNormal:init(save_id, marker)

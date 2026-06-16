@@ -1,3 +1,4 @@
+---@class BattleBackground
 local BattleBackground, super = HookSystem.hookScript(BattleBackground)
 
 function BattleBackground:init()

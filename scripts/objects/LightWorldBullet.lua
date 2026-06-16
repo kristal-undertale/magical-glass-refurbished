@@ -1,5 +1,9 @@
+---@class LightWorldBullet : WorldBullet
+---@overload fun(...) : LightWorldBullet
 local LightWorldBullet, super = Class(WorldBullet)
 
+---@param x number
+---@param y number
 function LightWorldBullet:init(x, y, texture)
     super.init(self, x, y, texture)
     

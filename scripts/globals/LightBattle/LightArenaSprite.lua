@@ -1,5 +1,9 @@
+---@class LightArenaSprite : ArenaSprite
+---@overload fun(...) : LightArenaSprite
 local LightArenaSprite, super = Class(ArenaSprite)
 
+---@param x number
+---@param y number
 function LightArenaSprite:init(arena, x, y)
     super.init(self, arena, x, y)
     

@@ -1,5 +1,9 @@
+---@class LightStatusDisplay : Object
+---@overload fun(...) : LightStatusDisplay
 local LightStatusDisplay, super = Class(Object)
 
+---@param x number
+---@param y number
 function LightStatusDisplay:init(x, y, event)
     super.init(self, x, y, SCREEN_WIDTH + 1, 43)
     

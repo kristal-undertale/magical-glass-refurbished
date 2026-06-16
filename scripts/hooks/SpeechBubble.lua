@@ -1,3 +1,4 @@
+---@class SpeechBubble
 local SpeechBubble, super = HookSystem.hookScript(SpeechBubble)
 
 function SpeechBubble:draw()

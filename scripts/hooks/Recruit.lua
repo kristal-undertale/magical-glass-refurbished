@@ -1,3 +1,4 @@
+---@class Recruit
 local Recruit, super = HookSystem.hookScript(Recruit)
 
 function Recruit:init()

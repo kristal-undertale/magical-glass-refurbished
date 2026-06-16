@@ -1,5 +1,10 @@
+---@class LightAttackBar : Object
+---@overload fun(...) : LightAttackBar
 local LightAttackBar, super = Class(Object)
 
+---@param x number
+---@param y number
+---@param scale_y number
 function LightAttackBar:init(x, y, battler, scale_y)
     super.init(self, x, y)
 
@@ -45,6 +50,7 @@ function LightAttackBar:burst()
     self.hit = true
 end
 
+---@param speed number
 function LightAttackBar:fade(speed, direction)
     self.fading = true
     if direction == "left" then

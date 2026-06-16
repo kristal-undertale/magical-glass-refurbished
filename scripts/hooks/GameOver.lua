@@ -1,3 +1,4 @@
+---@class GameOver
 local GameOver, super = HookSystem.hookScript(GameOver)
 
 function GameOver:init(x, y)

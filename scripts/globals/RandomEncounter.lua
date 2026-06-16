@@ -1,3 +1,17 @@
+---@class RandomEncounter
+---@field id string
+---@field population integer? Number of violent defeats before the empty encounter is used.
+---@field initial_minimum_steps integer
+---@field initial_random_steps integer
+---@field minimum_steps integer
+---@field random_steps integer
+---@field empty_steps integer
+---@field use_population_factor boolean
+---@field bubble string?
+---@field empty_encounter string
+---@field encounters string[]
+---@field light boolean
+---@overload fun(...) : RandomEncounter
 local RandomEncounter = Class()
 
 function RandomEncounter:init()
@@ -32,6 +46,7 @@ function RandomEncounter:init()
     self.light = true
 end
 
+---@param default boolean
 function RandomEncounter:resetSteps(default)
     if not self:populationKilled() then
         local minimum_steps = default and self.initial_minimum_steps or self.minimum_steps
@@ -87,14 +102,20 @@ function RandomEncounter:start()
     end
 end
 
+---@param flag string
+---@param value number
 function RandomEncounter:setFlag(flag, value)
     Game:setFlag("randomencounter#"..self.id..":"..flag, value)
 end
 
+---@param flag string
+---@param default boolean
 function RandomEncounter:getFlag(flag, default)
     return Game:getFlag("randomencounter#"..self.id..":"..flag, default)
 end
 
+---@param flag string
+---@param amount number
 function RandomEncounter:addFlag(flag, amount)
     return Game:addFlag("randomencounter#"..self.id..":"..flag, amount)
 end

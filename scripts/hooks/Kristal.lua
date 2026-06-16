@@ -1,3 +1,4 @@
+---@class Kristal
 local Kristal, super = HookSystem.hookScript(Kristal)
 
 function Kristal.quickReload(mode)

@@ -1,5 +1,10 @@
+---@class LightActionBox : Object
+---@overload fun(...) : LightActionBox
 local LightActionBox, super = Class(Object)
 
+---@param x number
+---@param y number
+---@param index number
 function LightActionBox:init(x, y, index, battler)
     super.init(self, x, y)
 

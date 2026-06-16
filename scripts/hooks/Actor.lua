@@ -1,3 +1,6 @@
+---@class Actor
+---@field use_light_battler_sprite boolean Whether this actor builds a composite light battle sprite.
+---@field light_battler_parts table<string, table> Composite sprite part data for light battle enemies.
 local Actor, super = HookSystem.hookScript(Actor)
 
 function Actor:init()
@@ -23,6 +26,7 @@ function Actor:getHeight()
     end
 end
 
+---@param id string
 function Actor:addLightBattlerPart(id, data)
     self.use_light_battler_sprite = true
     if type(data) == "string" then
@@ -32,6 +36,7 @@ function Actor:addLightBattlerPart(id, data)
     end
 end
 
+---@param part string
 function Actor:getLightBattlerPart(part)
     return self.light_battler_parts[part]
 end

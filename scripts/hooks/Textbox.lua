@@ -1,3 +1,4 @@
+---@class Textbox
 local Textbox, super = HookSystem.hookScript(Textbox)
 
 function Textbox:init(x, y, width, height, default_font, default_font_size, battle_box)

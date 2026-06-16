@@ -1,5 +1,14 @@
+---@class DustEffectLine : Object
+---@field canvas table
+---@field height number
+---@overload fun(...) : DustEffectLine
 local DustEffectLine, super = Class(Object)
 
+---@param x number
+---@param y number
+---@param allow_black_pixels boolean
+---@param after function
+---@param speed number
 function DustEffectLine:init(texture, x, y, allow_black_pixels, after, speed)
     super.init(self, x, y)
     speed = speed or 1

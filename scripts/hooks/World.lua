@@ -1,3 +1,4 @@
+---@class World
 local World, super = HookSystem.hookScript(World)
 
 function World:mapTransition(...)
@@ -54,6 +55,7 @@ function World:replaceCall(replace_name, name, scene)
 end
 
 -- Removes a phone call in the Light World CELL menu
+---@param name string
 function World:removeCall(name)
     for i, call in ipairs(self.calls) do
         if call[1] == name then
@@ -68,6 +70,7 @@ function World:clearCalls()
     self.calls = {}
 end
 
+---@param shop string
 function World:lightShopTransition(shop, options)
     self:fadeInto(function()
         Mod.libs["magical-glass"]:enterLightShop(shop, options)

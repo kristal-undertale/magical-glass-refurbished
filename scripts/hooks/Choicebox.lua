@@ -1,3 +1,4 @@
+---@class Choicebox
 local Choicebox, super = HookSystem.hookScript(Choicebox)
 
 function Choicebox:clearChoices()

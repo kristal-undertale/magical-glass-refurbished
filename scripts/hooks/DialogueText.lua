@@ -1,3 +1,4 @@
+---@class DialogueText
 local DialogueText, super = HookSystem.hookScript(DialogueText)
 
 function DialogueText:init(text, x, y, w, h, options)

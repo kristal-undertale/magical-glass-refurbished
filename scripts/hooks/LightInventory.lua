@@ -1,3 +1,4 @@
+---@class LightInventory
 local LightInventory, super = HookSystem.hookScript(LightInventory)
 
 function LightInventory:getDarkInventory()

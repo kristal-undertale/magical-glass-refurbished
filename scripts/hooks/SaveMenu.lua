@@ -1,3 +1,4 @@
+---@class SaveMenu
 local SaveMenu, super = HookSystem.hookScript(SaveMenu)
 
 function SaveMenu:update()

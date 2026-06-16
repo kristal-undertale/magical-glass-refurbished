@@ -1,3 +1,4 @@
+---@class Soul
 local Soul, super = HookSystem.hookScript(Soul)
 
 function Soul:init(x, y, color)

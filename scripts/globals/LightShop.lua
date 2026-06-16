@@ -1,3 +1,74 @@
+---@class LightShop : Object
+---@field arrow_sprite love.Texture
+---@field buy_confirmation_no_text string
+---@field buy_confirmation_text string
+---@field buy_confirmation_yes_text string
+---@field buy_confirming boolean
+---@field buy_no_space_text string
+---@field buy_refuse_text string
+---@field buy_sold_out_menu_text string
+---@field buy_sold_out_text string
+---@field buy_storage_text string
+---@field buy_text string
+---@field buy_too_expensive_text string
+---@field dialogue_text DialogueText
+---@field draw_divider boolean
+---@field fading_out boolean
+---@field heart_sprite love.Texture
+---@field hide_price boolean
+---@field info_box UIBox
+---@field item_offset number
+---@field large_box UIBox
+---@field leave_options table
+---@field right_text DialogueText
+---@field sell_confirmation_no_text string
+---@field sell_confirmation_text string
+---@field sell_confirmation_yes_text string
+---@field sell_confirming boolean
+---@field sell_current_selecting_x number
+---@field sell_current_selecting_y number
+---@field sell_item_rotation number
+---@field sell_no_storage_text string
+---@field sold_text string
+---@field talk_dialogue table
+---
+---@field state                    string                  Current shop state. Use [`LightShop:setState()`](lua://LightShop.setState) instead of setting manually.
+---@field state_reason             string?
+---@field timer                    number
+---@field hide_world               boolean
+---@field hide_main_menu_currency  boolean
+---
+---@field font                     love.Font
+---@field voice                    string?
+---@field shopkeeper               string?
+---@field shop_music               string?
+---@field music                    Music?
+---@field background               string?
+---@field background_speed         number
+---@field background_sprite        Sprite?
+---@field bg_cover                 Rectangle?
+---@field fade_alpha               number
+---
+---@field currency_text            string
+---@field sell_currency_text       string
+---@field encounter_text           string
+---@field shop_text                string
+---@field leaving_text             string
+---@field buy_menu_text            string
+---@field talk_text                string
+---
+---@field menu_options             table[]
+---@field items                    table[]
+---@field talks                    table[]
+---@field talk_replacements        table[]
+---@field sold_items               table
+---@field free_items               boolean
+---
+---@field current_selecting        integer
+---@field main_current_selecting   integer
+---@field current_selecting_choice integer
+---@field sell_page                integer
+---@overload fun(...) : LightShop
 local LightShop, super = Class(Object)
 
 function LightShop:init()
@@ -220,6 +291,7 @@ function LightShop:getVoice()
     return self.voice or (actor and actor:getVoice())
 end
 
+---@param text string
 function LightShop:getVoicedText(text)
     local voice = self:getVoice()
 
@@ -254,14 +326,20 @@ function LightShop:getIndentString()
     return nil
 end
 
+---@param text string
+---@param no_voice boolean
 function LightShop:setDialogueText(text, no_voice)
     self.dialogue_text:setText(no_voice and text or self:getVoicedText(text))
 end
 
+---@param text string
+---@param no_voice boolean
 function LightShop:setRightText(text, no_voice)
     self.right_text:setText(no_voice and text or self:getVoicedText(text))
 end
 
+---@param state string
+---@param reason string
 function LightShop:setState(state, reason)
     local old = self.state
     self.state = state
@@ -386,11 +464,14 @@ end
 
 function LightShop:onTalk() end
 
+---@param emote string
 function LightShop:onEmote(emote)
     -- Default behaviour: set sprite / animation
     self.shopkeeper:onEmote(emote)
 end
 
+---@param text string
+---@param callback function
 function LightShop:startDialogue(text, callback)
 
     local state = "MAINMENU"
@@ -418,6 +499,7 @@ function LightShop:registerItem(item, options)
     return self:replaceItem(#self.items + 1, item, options)
 end
 
+---@param index number
 function LightShop:replaceItem(index, item, options)
     if type(item) == "string" then
         item = Registry.createItem(item)
@@ -448,10 +530,14 @@ function LightShop:registerTalk(talk, color)
     table.insert(self.talks, {talk, {color=color or COLORS.white}})
 end
 
+---@param index number
 function LightShop:replaceTalk(talk, index, color)
     self.talks[index] = {talk, {color=color or COLORS.yellow}}
 end
 
+---@param index number
+---@param flag string
+---@param value number
 function LightShop:registerTalkAfter(talk, index, flag, value, color)
     table.insert(self.talk_replacements, {index, {talk, {flag=flag or ("talk_" .. tostring(index)), value=value, color=color or COLORS.yellow}}})
 end
@@ -811,6 +897,8 @@ function LightShop:shouldHideMainMenuCurrency()
     return self.hide_main_menu_currency
 end
 
+---@param key string
+---@param is_repeat boolean
 function LightShop:onKeyPressed(key, is_repeat)
     if self.state == "MAINMENU" then
         if Input.isConfirm(key) then
@@ -1083,10 +1171,14 @@ function LightShop:buyItem(current_item)
     end
 end
 
+---@param name string
+---@param value number
 function LightShop:setFlag(name, value)
     Game:setFlag("lightshop#" .. self.id .. ":" .. name, value)
 end
 
+---@param name string
+---@param default boolean
 function LightShop:getFlag(name, default)
     return Game:getFlag("lightshop#" .. self.id .. ":" .. name, default)
 end
@@ -1104,14 +1196,17 @@ function LightShop:getMoney()
     return Game.lw_money
 end
 
+---@param amount number
 function LightShop:setMoney(amount)
     Game.lw_money = amount
 end
 
+---@param amount number
 function LightShop:addMoney(amount)
     self:setMoney(self:getMoney() + amount)
 end
 
+---@param amount number
 function LightShop:removeMoney(amount)
     self:setMoney(self:getMoney() - amount)
 end

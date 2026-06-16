@@ -1,4 +1,5 @@
 ---@diagnostic disable: inject-field, undefined-field
+---@class TiledUtils
 local TiledUtils, super = HookSystem.hookScript(TiledUtils)
 
 local function slopeBounds(points)
@@ -44,6 +45,12 @@ local function slopeType(points)
 end
 
 --- detect if collision block is a polygon and checks if its a slope (like undertale's obj_sur, sul, sdl, sdr objects)
+---@param parent Object
+---@param data table
+---@param x number
+---@param y number
+---@param properties table?
+---@return Collider?
 function TiledUtils.colliderFromShape(parent, data, x, y, properties)
     local collider = super.colliderFromShape(parent, data, x, y, properties)
     if collider and data and data.shape == "polygon" and collider:includes(PolygonCollider) then

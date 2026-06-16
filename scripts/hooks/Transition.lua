@@ -1,3 +1,4 @@
+---@class Transition
 local Transition, super = HookSystem.hookScript(Transition)
 
 function Transition:init(x, y, shape, properties)

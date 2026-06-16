@@ -1,5 +1,9 @@
+---@class GameNotOver : Object
+---@overload fun(...) : GameNotOver
 local GameNotOver, super = Class(Object)
 
+---@param x number
+---@param y number
 function GameNotOver:init(x, y)
     super.init(self, 0, 0)
 
@@ -139,6 +143,7 @@ function GameNotOver:draw()
     Draw.setColor(1, 1, 1, 1)
 end
 
+---@param key string
 function GameNotOver:onKeyPressed(key)
     -- ?
 end

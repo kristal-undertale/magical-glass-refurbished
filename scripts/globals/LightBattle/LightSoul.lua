@@ -1,5 +1,9 @@
+---@class LightSoul : Object
+---@overload fun(...) : LightSoul
 local LightSoul, super = Class(Object)
 
+---@param x number
+---@param y number
 function LightSoul:init(x, y, color)
     super.init(self, x, y)
 
@@ -113,6 +117,9 @@ function LightSoul:shatter(count)
     Game.battle.soul = nil
 end
 
+---@param x number
+---@param y number
+---@param should_destroy boolean
 function LightSoul:transitionTo(x, y, should_destroy)
     if self.graze_sprite then
         self.graze_sprite.timer = 0
@@ -135,10 +142,14 @@ function LightSoul:isMoving()
     return self.moving_x ~= 0 or self.moving_y ~= 0
 end
 
+---@param x number
+---@param y number
 function LightSoul:getExactPosition(x, y)
     return self.x + self.partial_x, self.y + self.partial_y
 end
 
+---@param x number
+---@param y number
 function LightSoul:setExactPosition(x, y)
     self.x = math.floor(x)
     self.partial_x = x - self.x
@@ -146,6 +157,9 @@ function LightSoul:setExactPosition(x, y)
     self.partial_y = y - self.y
 end
 
+---@param x number
+---@param y number
+---@param speed number
 function LightSoul:move(x, y, speed)
     local movex, movey = x * (speed or 1), y * (speed or 1)
 
@@ -158,6 +172,8 @@ function LightSoul:move(x, y, speed)
     return moved, collided
 end
 
+---@param amount number
+---@param move_y number
 function LightSoul:moveX(amount, move_y)
     local last_collided = self.last_collided_x and (MathUtils.sign(amount) == self.last_collided_x)
 
@@ -178,6 +194,8 @@ function LightSoul:moveX(amount, move_y)
     end
 end
 
+---@param amount number
+---@param move_x number
 function LightSoul:moveY(amount, move_x)
     local last_collided = self.last_collided_y and (MathUtils.sign(amount) == self.last_collided_y)
 
@@ -198,6 +216,8 @@ function LightSoul:moveY(amount, move_x)
     end
 end
 
+---@param amount number
+---@param move_y number
 function LightSoul:moveXExact(amount, move_y)
     local sign = MathUtils.sign(amount)
     for i = sign, amount, sign do
@@ -248,6 +268,8 @@ function LightSoul:moveXExact(amount, move_y)
     return true
 end
 
+---@param amount number
+---@param move_x number
 function LightSoul:moveYExact(amount, move_x)
     local sign = MathUtils.sign(amount)
     for i = sign, amount, sign do
@@ -298,6 +320,7 @@ function LightSoul:moveYExact(amount, move_x)
     return true
 end
 
+---@param amount number
 function LightSoul:onDamage(bullet, amount)
     -- Can be overridden, called when the soul actually takes damage from a bullet
 end

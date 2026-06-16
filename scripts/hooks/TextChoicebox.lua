@@ -1,3 +1,4 @@
+---@class TextChoicebox
 local TextChoicebox, super = HookSystem.hookScript(TextChoicebox)
 
 function TextChoicebox:update()

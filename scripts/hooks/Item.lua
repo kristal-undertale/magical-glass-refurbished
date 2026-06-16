@@ -1,3 +1,30 @@
+---@class Item
+---@field short_name string? Short name shown in light battle item menus.
+---@field serious_name string? Alternate item name used in serious mode.
+---@field dark_name string? Alternate item name shown in dark battles.
+---@field use_method string Verb used when this item is used by the player.
+---@field use_method_other string? Verb used when this item is used on another party member.
+---@field shop_magic boolean Whether light shops show magic stats for this item.
+---@field shop_dont_show_change boolean Whether light shops hide stat changes for this item.
+---@field equip_can_convert boolean? Whether equipment can convert when changing world type.
+---@field equip_display_name string?
+---@field heal_bonus number
+---@field inv_bonus number
+---@field flee_bonus number
+---@field light_bolt_count integer
+---@field light_bolt_speed number
+---@field light_bolt_speed_variance number
+---@field light_bolt_speed_multiplier number
+---@field light_bolt_acceleration number
+---@field light_bolt_start number|number[]
+---@field light_multibolt_variance table?
+---@field light_bolt_direction string?
+---@field light_bolt_miss_threshold number?
+---@field light_attack_crit_multiplier number
+---@field attack_sprite string
+---@field attack_sound string
+---@field attack_pitch number
+---@field tags string[]
 local Item, super = HookSystem.hookScript(Item)
 
 function Item:init()
@@ -129,6 +156,7 @@ function Item:getLightBoltStart()
     end
 end
 
+---@param index number
 function Item:getLightMultiboltVariance(index)
     if Game.battle.multi_mode or self.light_multibolt_variance == nil then
         return nil
@@ -175,6 +203,7 @@ function Item:getLightBattleText(user, target)
     end
 end
 
+---@param amount number
 function Item:getLightBattleHealingText(user, target, amount)
     local maxed = false
     if self.target == "ally" then
@@ -281,6 +310,8 @@ function Item:onLightBattleUse(user, target)
     end
 end
 
+---@param damage number
+---@param stretch number
 function Item:onLightAttack(battler, enemy, damage, stretch, crit)
     if damage <= 0 then
         enemy:onDodge(battler, true)
@@ -317,6 +348,10 @@ function Item:onLightAttack(battler, enemy, damage, stretch, crit)
     return false
 end
 
+---@param damage number
+---@param stretch number
+---@param light boolean
+---@param finish boolean
 function Item:onLightAttackHurt(battler, enemy, damage, stretch, crit, light, finish)
     local sound = enemy:getDamageSound() or "damage"
     if sound and type(sound) == "string" and (damage > 0 or enemy.always_play_damage_sound) then
@@ -335,6 +370,7 @@ function Item:onLightAttackHurt(battler, enemy, damage, stretch, crit, light, fi
     end
 end
 
+---@param attacked boolean
 function Item:onLightMiss(battler, enemy, anim, show_status, attacked)
     enemy:hurt(0, battler, nil, nil, anim, show_status, attacked)
 end

@@ -1,5 +1,10 @@
+---@class LightActionButton : Object
+---@overload fun(...) : LightActionButton
 local LightActionButton, super = Class(Object)
 
+---@param type string
+---@param x number
+---@param y number
 function LightActionButton:init(type, battler, x, y)
     super.init(self, x, y)
 

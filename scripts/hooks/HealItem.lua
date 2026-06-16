@@ -1,3 +1,4 @@
+---@class HealItem
 local HealItem, super = HookSystem.hookScript(HealItem)
 
 function HealItem:onWorldUse(target)
@@ -213,6 +214,7 @@ function HealItem:getWorldUseText(target)
     end
 end
 
+---@param amount number
 function HealItem:getLightBattleHealingText(user, target, amount)
     local maxed = false
     if self.target == "ally" then
@@ -257,6 +259,7 @@ function HealItem:getLightBattleHealingText(user, target, amount)
     return message
 end
 
+---@param amount number
 function HealItem:getLightWorldHealingText(target, amount)
     local maxed = false
 

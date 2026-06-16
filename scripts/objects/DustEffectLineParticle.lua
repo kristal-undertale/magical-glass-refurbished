@@ -1,5 +1,10 @@
+---@class DustEffectLineParticle : Sprite
+---@overload fun(...) : DustEffectLineParticle
 local DustEffectLineParticle, super = Class(Sprite, "DustEffectLineParticle")
 
+---@param x number
+---@param y number
+---@param allow_black_pixels boolean
 function DustEffectLineParticle:init(line, x, y, allow_black_pixels)
     super.init(self, nil, x, y)
     

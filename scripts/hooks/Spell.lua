@@ -1,3 +1,4 @@
+---@class Spell
 local Spell, super = HookSystem.hookScript(Spell)
 
 function Spell:init()
@@ -72,6 +73,7 @@ function Spell:getLightWorldCastMessage(user, target)
     return string.format("* %s cast %s.", user:getNameOrYou(), self:getName()) .. (TableUtils.contains(self.tags, "heal") and self:getWorldHealMessage(user, target, Mod.libs["magical-glass"].heal_amount) and "\n" .. self:getWorldHealMessage(user, target, Mod.libs["magical-glass"].heal_amount) or "")
 end
 
+---@param amount number
 function Spell:getWorldHealMessage(user, target, amount)
     local maxed = false
     if self.target == "ally" then
@@ -104,6 +106,7 @@ function Spell:getWorldHealMessage(user, target, amount)
     return message
 end
 
+---@param amount number
 function Spell:getHealMessage(user, target, amount)
     local maxed = false
     if self.target == "ally" then

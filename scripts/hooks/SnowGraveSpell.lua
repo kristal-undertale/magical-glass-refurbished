@@ -1,3 +1,4 @@
+---@class SnowGraveSpell
 local SnowGraveSpell, super = HookSystem.hookScript(SnowGraveSpell)
 
 function SnowGraveSpell:createSnowflake(x, y)
