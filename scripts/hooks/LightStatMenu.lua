@@ -241,7 +241,8 @@ function LightStatMenu:draw()
         love.graphics.setStencilTest("equal", 0)
     end
 
-    love.graphics.print("\"" .. party:getName() .. "\"", 4, 8)
+    local name = (Mod.libs["magical-glass"].use_savename and self.party_selecting == 1) and Game.save_name or party:getName()
+    love.graphics.print("\"" .. name .. "\"", 4, 8)
     if party:getLightStatText() then
         if party:getLightPortrait() then
             Draw.printAlign(party:getLightStatText(), 222, 116, {align = "center", line_offset = -10})

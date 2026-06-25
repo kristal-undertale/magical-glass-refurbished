@@ -5,6 +5,9 @@ function Spell:init()
     super.init(self)
 
     self.check = "Example info"
+
+    -- If true (default), the spell's name ("* Name - ") is prepended to its check message
+    self.check_append = true
 end
 
 function Spell:getCheck()
@@ -12,6 +15,7 @@ function Spell:getCheck()
 end
 
 function Spell:onCheck()
+    local appended = self.check_append and ("* \"" .. self:getName() .. "\" - ") or ""
     if type(self:getCheck()) == "table" then
         local text
         for i, check in ipairs(self:getCheck()) do
@@ -22,9 +26,9 @@ function Spell:onCheck()
                 table.insert(text, check)
             end
         end
-        Game.world:showText({{"* \"" .. self:getName() .. "\" - " .. (self:getCheck()[1] or "")}, text})
+        Game.world:showText({{appended .. (self:getCheck()[1] or "")}, text})
     else
-        Game.world:showText("* \"" .. self:getName() .. "\" - " .. self:getCheck())
+        Game.world:showText(appended .. self:getCheck())
     end
 end
 

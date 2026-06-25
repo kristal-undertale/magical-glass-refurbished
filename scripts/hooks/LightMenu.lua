@@ -22,7 +22,7 @@ function LightMenu:draw()
 
     love.graphics.setFont(self.font)
     Draw.setColor(PALETTE["world_text"])
-    love.graphics.print(chara:getShortName(), 46, 60 + offset)
+    love.graphics.print(Mod.libs["magical-glass"].use_savename and Game.save_name or chara:getShortName(), 46, 60 + offset)
 
     love.graphics.setFont(self.font_small)
     love.graphics.print(Kristal.getLibConfig("magical-glass", "light_level_name_short") .. "  " .. chara:getLightLV(), 46, 100 + offset)

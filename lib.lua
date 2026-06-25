@@ -26,6 +26,7 @@ function Lib:save(data)
     data.magical_glass["light_battle_shake_text"] = Lib.light_battle_shake_text
     data.magical_glass["rearrange_cell_calls"] = Lib.rearrange_cell_calls
     data.magical_glass["game_overs"] = Lib.game_overs
+    data.magical_glass["use_savename"] = Lib.use_savename
     MG_GAMEOVERS = 0
     
     data.calls = Game.world.calls
@@ -48,7 +49,8 @@ function Lib:load(data, new_file)
     Lib.light_battle_shake_text = data.magical_glass["light_battle_shake_text"] or 0
     Lib.rearrange_cell_calls = data.magical_glass["rearrange_cell_calls"] or false
     Lib.game_overs = MG_GAMEOVERS_TEMP and (MG_GAMEOVERS_TEMP + MG_GAMEOVERS) or data.magical_glass["game_overs"] and (data.magical_glass["game_overs"] + MG_GAMEOVERS) or MG_GAMEOVERS or 0
-    
+    Lib.use_savename = data.magical_glass["use_savename"] ~= false or true
+
     Game.world.calls = {}
     if data.calls then
         Game.world.calls = data.calls

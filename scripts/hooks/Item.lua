@@ -42,6 +42,10 @@ function Item:init()
     -- How this item is used on other party members (eats, etc.)
     self.use_method_other = nil
 
+    -- If true (default), the item's name ("* Name - ") is prepended to its check message
+    -- This is mainly used by the kristal localizer compatibility lib for mgr (used as in, sets it to false) since UNDERTALE's text strings already add the name prefixes to check dialogue manually
+    self.check_append = true
+
     -- Displays magic stats for weapons and armors in light shops
     self.shop_magic = false
     -- Doesn't display stats for weapons and armors in light shops
@@ -80,6 +84,28 @@ function Item:init()
     self.attack_pitch = 1
 
     self.tags = {}
+end
+
+function Item:getCheck()
+    return self.check
+end
+
+function Item:onCheck()
+    local appended = self.check_append and ("* \"" .. self:getName() .. "\" - ") or ""
+    if type(self:getCheck()) == "table" then
+        local text
+        for i, check in ipairs(self:getCheck()) do
+            if i > 1 then
+                if text == nil then
+                    text = {}
+                end
+                table.insert(text, check)
+            end
+        end
+        Game.world:showText({ { appended .. (self:getCheck()[1] or "") }, text })
+    else
+        Game.world:showText(appended .. self:getCheck())
+    end
 end
 
 function Item:getSellPrice()
