@@ -52,7 +52,7 @@ end
 
 function item:onWorldUse(target)
     Game.world:closeMenu()
-    Game.world.timer:after(2/30, function()
+    Game.world.timer:after(2 / 30, function()
         if Kristal.getLibConfig("magical-glass", "punch_card_exploit") then
             ImageViewerBroken("world/punchcard")
         else
@@ -65,12 +65,12 @@ end
 function item:getLightBattleText(user, target)
     if TableUtils.contains(user.chara:getWeapon() and user.chara:getWeapon().tags or {}, "punch") then
         return {
-            "* OOOORAAAAA!!![wait:10]\n* "..user.chara:getNameOrYou().." rips up the punch card!",
-            "* "..(select(2, user.chara:getNameOrYou()) and user.chara.id == Game.battle.party[1].chara.id and "Your" or user.chara:getNameOrYou().."'s").." hands are burning![wait:10]\n* AT increased by "..self:getATIncrease(user).."!"
+            "* OOOORAAAAA!!![wait:10]\n* " .. user.chara:getNameOrYou() .. " rips up the punch card!",
+            "* " .. (select(2, user.chara:getNameOrYou()) and user.chara.id == Game.battle.party[1].chara.id and "Your" or user.chara:getNameOrYou() .. "'s") .. " hands are burning![wait:10]\n* AT increased by " .. self:getATIncrease(user) .. "!"
         }
     else
         return {
-            "* OOOORAAAAA!!![wait:10]\n* "..user.chara:getNameOrYou().." rips up the punch card!",
+            "* OOOORAAAAA!!![wait:10]\n* " .. user.chara:getNameOrYou() .. " rips up the punch card!",
             "* But nothing happened."
         }
     end
@@ -79,12 +79,12 @@ end
 function item:getBattleText(user, target)
     if TableUtils.contains(user.chara:getWeapon() and user.chara:getWeapon().tags or {}, "punch") then
         return {
-            "* OOOORAAAAA!!![wait:10]\n* "..user.chara:getName().." rips up the punch card!",
-            "* "..user.chara:getName().."'s hands are burning![wait:10]\n* AT increased by "..self:getATIncrease(user).."!"
+            "* OOOORAAAAA!!![wait:10]\n* " .. user.chara:getName() .. " rips up the punch card!",
+            "* " .. user.chara:getName() .. "'s hands are burning![wait:10]\n* AT increased by " .. self:getATIncrease(user) .. "!"
         }
     else
         return {
-            "* OOOORAAAAA!!![wait:10]\n* "..user.chara:getName().." rips up the punch card!",
+            "* OOOORAAAAA!!![wait:10]\n* " .. user.chara:getName() .. " rips up the punch card!",
             "* But nothing happened."
         }
     end

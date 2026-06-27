@@ -81,7 +81,7 @@ function item:getBattleText(user, target)
         "* (An illustration of a hug.)",
         "* Love yourself! I love you!"
     }
-    
+
     return message[picker] .. "\n" ..super.getBattleText(self, user, target)
 end
 

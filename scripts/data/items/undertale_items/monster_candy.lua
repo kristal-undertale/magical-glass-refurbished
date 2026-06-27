@@ -50,7 +50,7 @@ function item:getWorldUseText(target)
         end
     end
 
-    return "* " .. target:getNameOrYou() .. " ate the Monster Candy."..message
+    return "* " .. target:getNameOrYou() .. " ate the Monster Candy." .. message
 end
 
 function item:getLightBattleText(user, target)
@@ -66,7 +66,7 @@ function item:getLightBattleText(user, target)
         end
     end
 
-    return "* " .. target.chara:getNameOrYou() .. " ate the Monster Candy."..message
+    return "* " .. target.chara:getNameOrYou() .. " ate the Monster Candy." .. message
 end
 
 return item

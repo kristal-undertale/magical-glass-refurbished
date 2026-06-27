@@ -1,15 +1,12 @@
----@class LightArenaSprite : ArenaSprite
----@overload fun(...) : LightArenaSprite
 local LightArenaSprite, super = Class(ArenaSprite)
 
----@param x number
----@param y number
 function LightArenaSprite:init(arena, x, y)
     super.init(self, arena, x, y)
-    
+
     self.outline = true
 end
 
+-- Only draw the outline for the arena border
 function LightArenaSprite:draw()
     if self.background then
         Draw.setColor(self.arena:getBackgroundColor())
@@ -20,7 +17,7 @@ function LightArenaSprite:draw()
 
     if self.outline then
         local r, g, b, a = self:getDrawColor()
-        local arena_r,arena_g,arena_b,arena_a = self.arena:getDrawColor()
+        local arena_r, arena_g, arena_b, arena_a = self.arena:getDrawColor()
 
         Draw.setColor(r * arena_r, g * arena_g, b * arena_b, a * arena_a)
         love.graphics.setLineStyle("rough")

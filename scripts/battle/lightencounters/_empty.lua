@@ -9,6 +9,7 @@ function encounter:init()
     self.music = nil
 end
 
+-- Replace the overworld music with the "But nobody came."
 function encounter:onBattleStart()
     Game.battle:setState("BUTNOBODYCAME")
     Game.world.music:stop()

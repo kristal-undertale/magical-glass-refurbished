@@ -58,7 +58,7 @@ function item:getLightBattleText(user, target)
         elseif user.chara.id == target.chara.id then
             return "* " .. user.chara:getNameOrYou() .. " hit the Croquet Roll into\ntheir mouth."
         else
-            return "* " .. user.chara:getNameOrYou() .. " hit the Croquet Roll into\n"..target.chara:getName().."'s mouth."
+            return "* " .. user.chara:getNameOrYou() .. " hit the Croquet Roll into\n" .. target.chara:getName() .. "'s mouth."
         end
     end
 end

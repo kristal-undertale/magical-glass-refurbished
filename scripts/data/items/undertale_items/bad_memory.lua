@@ -40,9 +40,9 @@ end
 
 function item:getWorldUseText(target, hurt)
     if hurt then
-        return "* "..target:getNameOrYou().." "..self:getUseMethod(target).." the Bad Memory.\n* "..target:getNameOrYou().." lost 1HP."
+        return "* " .. target:getNameOrYou() .. " " .. self:getUseMethod(target) .. " the Bad Memory.\n* " .. target:getNameOrYou() .. " lost 1HP."
     else
-        return "* "..target:getNameOrYou().." "..self:getUseMethod(target).." the Bad Memory.\n"..self:getLightWorldHealingText(target, math.huge)
+        return "* " .. target:getNameOrYou() .. " " .. self:getUseMethod(target) .. " the Bad Memory.\n" .. self:getLightWorldHealingText(target, math.huge)
     end
 end
 
@@ -60,9 +60,9 @@ end
 
 function item:getLightBattleText(user, target, hurt)
     if hurt then
-        return "* "..target.chara:getNameOrYou().." "..self:getUseMethod(target.chara).." the Bad Memory.\n* "..target.chara:getNameOrYou().." lost 1HP."
+        return "* " .. target.chara:getNameOrYou() .. " " .. self:getUseMethod(target.chara) .. " the Bad Memory.\n* " .. target.chara:getNameOrYou() .. " lost 1HP."
     else
-        return "* "..target.chara:getNameOrYou().." "..self:getUseMethod(target.chara).." the Bad Memory.\n"..self:getLightBattleHealingText(user, target, math.huge)
+        return "* " .. target.chara:getNameOrYou() .. " " .. self:getUseMethod(target.chara) .. " the Bad Memory.\n" .. self:getLightBattleHealingText(user, target, math.huge)
     end
 end
 

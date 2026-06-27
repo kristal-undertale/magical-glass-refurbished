@@ -43,7 +43,7 @@ end
 
 function item:getWorldUseText(target)
     if not Mod.libs["magical-glass"].serious_mode then
-        return "* "..target:getNameOrYou().." "..self:getUseMethod(target).." the Hush Puppy.\n* Dog-magic is neutralized."
+        return "* " .. target:getNameOrYou() .. " " .. self:getUseMethod(target) .. " the Hush Puppy.\n* Dog-magic is neutralized."
     else
         return super.getWorldUseText(self, target)
     end
@@ -51,7 +51,7 @@ end
 
 function item:getLightBattleText(user, target)
     if not Mod.libs["magical-glass"].serious_mode then
-        return "* "..target.chara:getNameOrYou().." "..self:getUseMethod(target.chara).." the Hush Puppy.\n* Dog-magic is neutralized."
+        return "* " .. target.chara:getNameOrYou() .. " " .. self:getUseMethod(target.chara) .. " the Hush Puppy.\n* Dog-magic is neutralized."
     else
         return super.getLightBattleText(self, user, target)
     end

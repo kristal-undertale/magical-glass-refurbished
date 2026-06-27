@@ -63,7 +63,7 @@ end
 
 function item:onWorldUse(target)
     local dogsad = MathUtils.round(MathUtils.random(0, 3))
-    
+
     local amount = 1
 
     if dogsad == 0 then
@@ -78,9 +78,9 @@ function item:onWorldUse(target)
     if dogsad == 3 then
         amount = math.huge
     end
-    
+
     local text = self:getWorldUseText(target, dogsad)
-    
+
     local best_amount
     for _, member in ipairs(Game.party) do
         local equip_amount = 0
@@ -124,8 +124,8 @@ function item:getWorldUseText(target, dogsad)
     if dogsad == 3 then
         message = "* It's literally garbage???"
     end
-    
-    return super.getWorldUseText(self, target).."\n"..message
+
+    return super.getWorldUseText(self, target) .. "\n" .. message
 end
 
 function item:getLightBattleText(user, target, dogsad)
@@ -142,8 +142,8 @@ function item:getLightBattleText(user, target, dogsad)
     if dogsad == 3 then
         message = "* It's literally garbage???"
     end
-    
-    return super.getLightBattleText(self, user, target).."\n"..message
+
+    return super.getLightBattleText(self, user, target) .. "\n" .. message
 end
 
 function item:onLightBattleUse(user, target)
@@ -163,7 +163,7 @@ function item:onLightBattleUse(user, target)
     if dogsad == 3 then
         amount = math.huge
     end
-    
+
     for _, equip in ipairs(user.chara:getEquipment()) do
         if equip.getHealBonus then
             amount = amount + equip:getHealBonus()
@@ -172,7 +172,7 @@ function item:onLightBattleUse(user, target)
 
     self:battleUseSound(user, target)
     target:heal(amount, false)
-    Game.battle:battleText(self:getLightBattleText(user, target, dogsad).."\n"..self:getLightBattleHealingText(user, target, amount))
+    Game.battle:battleText(self:getLightBattleText(user, target, dogsad) .. "\n" .. self:getLightBattleHealingText(user, target, amount))
     return true
 end
 
@@ -193,7 +193,7 @@ function item:onBattleUse(user, target)
     if dogsad == 3 then
         amount = math.huge
     end
-    
+
     for _, equip in ipairs(user.chara:getEquipment()) do
         if equip.getHealBonus then
             amount = amount + equip:getHealBonus()

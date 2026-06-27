@@ -46,27 +46,27 @@ end
 
 function item:onWorldUse(target)
     self:worldUseSound(target)
-    
+
     local old_health = target:getHealth()
     Game.world:heal(target, self:getHealAmount(target.id), self:getWorldUseText(target), self)
     if old_health < target:getStat("health") and target:getStat("health") > 1 then
         target:setHealth(target:getStat("health") - 1 + old_health % 1)
     end
-    
+
     return true
 end
 
 function item:onLightBattleUse(user, target)
     self:battleUseSound(user, target)
-    
+
     local old_health = target.chara:getHealth()
     target:heal(self:getHealAmount(target.chara.id), false)
     if old_health < target.chara:getStat("health") and target.chara:getStat("health") > 1 then
         target.chara:setHealth(target.chara:getStat("health") - 1 + old_health % 1)
     end
 
-    Game.battle:battleText(self:getLightBattleText(user, target).."\n"..self:getLightBattleHealingText(user, target, math.huge))
-    
+    Game.battle:battleText(self:getLightBattleText(user, target) .. "\n" .. self:getLightBattleHealingText(user, target, math.huge))
+
     return true
 end
 

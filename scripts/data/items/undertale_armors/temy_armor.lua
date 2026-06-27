@@ -17,7 +17,7 @@ function item:init()
 
     -- Shop description
     self.shop = "ARMOR 20DF\nmakes\nbattles\ntoo easy"
-    self.shop_dont_show_change = true
+    self.shop_hide_change = true
     -- Default shop sell price
     self.sell_price = 500
     -- Whether the item can be sold
@@ -46,22 +46,22 @@ function item:init()
 end
 
 function item:showEquipText(target)
-    Game.world:showText("* "..target:getNameOrYou().." donned the Temmie Armor.")
+    Game.world:showText("* " .. target:getNameOrYou() .. " donned the Temmie Armor.")
 end
 
 function item:getLightBattleText(user, target)
-    local text = "* "..target.chara:getNameOrYou().." donned the "..self:getUseName().."."
+    local text = "* " .. target.chara:getNameOrYou() .. " donned the " .. self:getUseName() .. "."
     if user ~= target then
-        text = "* "..user.chara:getNameOrYou().." gave the "..self:getUseName().." to "..target.chara:getNameOrYou(true)..".\n" .. "* "..target.chara:getNameOrYou().." donned it."
+        text = "* " .. user.chara:getNameOrYou() .. " gave the " .. self:getUseName() .. " to " .. target.chara:getNameOrYou(true) .. ".\n" .. "* " .. target.chara:getNameOrYou() .. " donned it."
     end
     return text
 end
 
 function item:getBattleText(user, target)
     if self:canEquip(target.chara) then
-        local text = "* "..target.chara:getName().." donned the "..self:getUseName().."!"
+        local text = "* " .. target.chara:getName() .. " donned the " .. self:getUseName() .. "!"
         if user ~= target then
-            text = "* "..user.chara:getName().." gave the "..self:getUseName().." to "..target.chara:getName().."!\n" .. "* "..target.chara:getName().." donned it!"
+            text = "* " .. user.chara:getName() .. " gave the " .. self:getUseName() .. " to " .. target.chara:getName() .. "!\n" .. "* " .. target.chara:getName() .. " donned it!"
         end
         return text
     else

@@ -31,7 +31,7 @@ function item:init()
     self.bonuses = {
         attack = 3
     }
-    
+
     self.light_bolt_direction = "random"
     self.light_bolt_speed_multiplier = 1.25
 
@@ -48,17 +48,17 @@ function item:showEquipTextFail(target)
 end
 
 function item:getLightBattleText(user, target)
-    local text = "* "..target.chara:getNameOrYou().." equipped "..self:getUseName().."."
+    local text = "* " .. target.chara:getNameOrYou() .. " equipped " .. self:getUseName() .. "."
     if user ~= target then
-        text = "* "..user.chara:getNameOrYou().." gave "..self:getUseName().." to "..target.chara:getNameOrYou(true)..".\n" .. "* "..target.chara:getNameOrYou().." equipped it."
+        text = "* " .. user.chara:getNameOrYou() .. " gave " .. self:getUseName() .. " to " .. target.chara:getNameOrYou(true) .. ".\n" .. "* " .. target.chara:getNameOrYou() .. " equipped it."
     end
     return text
 end
 
 function item:getLightBattleTextFail(user, target)
-    local text = "* "..target.chara:getNameOrYou().." didn't want to equip "..self:getUseName().."."
+    local text = "* " .. target.chara:getNameOrYou() .. " didn't want to equip " .. self:getUseName() .. "."
     if user ~= target then
-        text = "* "..user.chara:getNameOrYou().." gave "..self:getUseName().." to "..target.chara:getNameOrYou(true)..".\n" .. "* "..target.chara:getNameOrYou().." didn't want to equip it."
+        text = "* " .. user.chara:getNameOrYou() .. " gave " .. self:getUseName() .. " to " .. target.chara:getNameOrYou(true) .. ".\n" .. "* " .. target.chara:getNameOrYou() .. " didn't want to equip it."
     end
     return text
 end

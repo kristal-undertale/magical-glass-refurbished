@@ -45,7 +45,7 @@ function item:getLightBattleText(user, target)
     if not self.cooked then
         message = "\n* They're better dry."
     end
-    return "* " .. target.chara:getNameOrYou() .. " "..self:getUseMethod(target.chara).." the Instant Noodles."..message
+    return "* " .. target.chara:getNameOrYou() .. " " .. self:getUseMethod(target.chara) .. " the Instant Noodles." .. message
 end
 
 function item:onLightBattleUse(user, target)
@@ -54,7 +54,7 @@ function item:onLightBattleUse(user, target)
         local text = self:getLightBattleText(user, target)
         self:battleUseSound(user, target)
         local amount = self:getBattleHealAmount(target.chara.id)
-        
+
         if self.heal_amount then
             text = text .. "\n" .. self:getLightBattleHealingText(user, target, amount)
         end

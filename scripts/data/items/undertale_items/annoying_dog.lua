@@ -49,7 +49,7 @@ function item:onWorldUse(target)
 end
 
 function item:getBattleText(target)
-    return "* "..target.chara:getName().." deployed the "..self:getUseName().."!"
+    return "* " .. target.chara:getName() .. " deployed the " .. self:getUseName() .. "!"
 end
 
 return item

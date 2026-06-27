@@ -49,7 +49,7 @@ function item:getLightBattleText(user, target)
         end
     end
 
-    return "* " .. target.chara:getNameOrYou() .. " ate the Spider Donut."..message
+    return "* " .. target.chara:getNameOrYou() .. " ate the Spider Donut." .. message
 end
 
 return item

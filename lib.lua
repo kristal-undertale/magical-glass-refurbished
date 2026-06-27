@@ -116,6 +116,28 @@ function Lib:preInit()
     MG_GAMEOVERS = 0
     ORIG_REACTION_X_BATTLE = Textbox.REACTION_X_BATTLE
     ORIG_REACTION_Y_BATTLE = Textbox.REACTION_Y_BATTLE
+
+    -- Dark battle reaction position backup (new upstream approach)
+    self.ORIG_REACTION_X_BATTLE = Textbox.REACTION_X_BATTLE
+    self.ORIG_REACTION_Y_BATTLE = Textbox.REACTION_Y_BATTLE
+
+    -- Light battle reaction positioning
+    self.REACTION_X_BATTLE = {
+            ["left"] = 73  - 38,
+         ["leftmid"] = 158 - 38,
+             ["mid"] = 262 - 38,
+          ["middle"] = 262 - 38,
+        ["rightmid"] = 361 - 38,
+           ["right"] = 402 - 38,
+    }
+
+    self.REACTION_Y_BATTLE = {
+              ["top"] = -9 - 4,
+              ["mid"] =  26 - 4,
+           ["middle"] =  26 - 4,
+        ["bottommid"] =  46 - 4,
+           ["bottom"] =  59 - 4,
+    }
     
     MG_PALETTE = {
         ["tension_maxtext"] = PALETTE["tension_maxtext"],
@@ -167,6 +189,7 @@ function Lib:preInit()
     }
     
     MG_EVENT = {
+        getMonsterSoul = "getMonsterSoul",
         onLightBattleActionBegin = "onLightBattleActionBegin",
         onLightBattleActionEnd = "onLightBattleActionEnd",
         onLightBattleActionCommit = "onLightBattleActionCommit",
@@ -307,6 +330,22 @@ function Lib:init()
 
     self.encounters_enabled = false
     self.steps_until_encounter = nil
+end
+
+-- If the party member has no weapon, use this as a fallback weapon (the Stick)
+function Lib:onRegisterItems()
+    Lib.fallback_weapon = Registry.createItem("undertale/stick")
+end
+
+-- Gets the path to the monster soul sprites
+function Lib:assetsMonsterSoulCheckOverwrite(path)
+    if StringUtils.sub(path, 1, 7) == "player/" and Game:getMonsterSoul() then
+        path = StringUtils.sub(path, 1, 7) .. "monster" .. "/" .. StringUtils.sub(path, 8)
+    elseif StringUtils.sub(path, 1, 8) == "!player/" then
+        return StringUtils.sub(path, 2)
+    end
+
+    return path
 end
 
 function Lib:onGameOver(x, y)

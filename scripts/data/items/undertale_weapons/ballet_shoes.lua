@@ -39,20 +39,20 @@ function item:init()
     self.light_bolt_start = -90
     self.light_bolt_miss_threshold = 2
     self.light_bolt_direction = "right"
-    self.light_multibolt_variance = {{0, 25, 50}, {100, 125, 150}}
-    
+    self.light_multibolt_variance = { { 0, 25, 50 }, { 100, 125, 150 } }
+
     self.bolt_count = 3
-    self.multibolt_variance = {{40, 60}}
+    self.multibolt_variance = { { 40, 60 } }
 
     self.attack_sound = "punchstrong"
-    
+
     self.can_equip = {
         ["susie"] = false
     }
 end
 
 function item:showEquipText(target)
-    Game.world:showText("* " .. target:getNameOrYou().." equipped Ballet Shoes.")
+    Game.world:showText("* " .. target:getNameOrYou() .. " equipped Ballet Shoes.")
 end
 
 function item:showEquipTextFail(target)
@@ -60,57 +60,27 @@ function item:showEquipTextFail(target)
 end
 
 function item:getLightBattleText(user, target)
-    local text = "* "..target.chara:getNameOrYou().." equipped "..self:getUseName().."."
+    local text = "* " .. target.chara:getNameOrYou() .. " equipped " .. self:getUseName() .. "."
     if user ~= target then
-        text = "* "..user.chara:getNameOrYou().." gave the "..self:getUseName().." to "..target.chara:getNameOrYou(true)..".\n" .. "* "..target.chara:getNameOrYou().." equipped it."
+        text = "* " .. user.chara:getNameOrYou() .. " gave the " .. self:getUseName() .. " to " .. target.chara:getNameOrYou(true) .. ".\n" .. "* " .. target.chara:getNameOrYou() .. " equipped it."
     end
     return text
 end
 
 function item:getLightBattleTextFail(user, target)
-    local text = "* "..target.chara:getNameOrYou().." didn't want to equip "..self:getUseName().."."
+    local text = "* " .. target.chara:getNameOrYou() .. " didn't want to equip " .. self:getUseName() .. "."
     if user ~= target then
-        text = "* "..user.chara:getNameOrYou().." gave "..self:getUseName().." to "..target.chara:getNameOrYou(true)..".\n" .. "* "..target.chara:getNameOrYou().." didn't want to equip it."
+        text = "* " .. user.chara:getNameOrYou() .. " gave " .. self:getUseName() .. " to " .. target.chara:getNameOrYou(true) .. ".\n" .. "* " .. target.chara:getNameOrYou() .. " didn't want to equip it."
     end
     return text
 end
 
 function item:onLightAttack(battler, enemy, damage, stretch, crit)
-    if damage <= 0 then
-        enemy:onDodge(battler, true)
-    end
-    local src = Assets.stopAndPlaySound(self:getLightAttackSound() or "laz_c")
-    src:setPitch(self:getLightAttackPitch() or 1)
+    self:startLightAttackAnimation(battler, enemy, damage, stretch, crit, { sprite = "effects/lightattack/hyperfoot", color = true,
+      crit_color = true, shake = true, speed = 2 / 30, scale = 1, crit_sound = true, battle_shake = true, trigger_dodge = true })
 
-    local sprite = Sprite("effects/lightattack/hyperfoot")
-    sprite.battler_id = battler and Game.battle:getPartyIndex(battler.chara.id) or nil
-    table.insert(enemy.dmg_sprites, sprite)
-    sprite:setOrigin(0.5)
-    local relative_pos_x, relative_pos_y = enemy:getRelativePos((enemy.width / 2) - (#Game.battle.attackers - 1) * 5 / 2 + (TableUtils.getIndex(Game.battle.attackers, battler) - 1) * 5, (enemy.height / 2))
-    sprite:setPosition(relative_pos_x + enemy.dmg_sprite_offset[1], relative_pos_y + enemy.dmg_sprite_offset[2])
-    sprite.layer = LIGHT_BATTLE_LAYERS["above_arena_border"]
-    sprite.color = {battler.chara:getLightMultiboltAttackColor()}
-    enemy.parent:addChild(sprite)
-    Game.battle:shakeCamera(2, 2, 0.35)
-
-    if crit then
-        if Utils.equal({battler.chara:getLightMultiboltAttackColor()}, COLORS.white) then
-            sprite:setColor(TableUtils.lerp(COLORS.white, COLORS.yellow, 0.5))
-        else
-            sprite:setColor(TableUtils.lerp({battler.chara:getLightMultiboltAttackColor()}, COLORS.white, 0.5))
-        end
-        Assets.stopAndPlaySound("saber3")
-    end
-
-    Game.battle:shakeAttackSprite(sprite)
-
-    Game.battle.timer:after(10/30, function()
+    Game.battle.timer:after(10 / 30, function()
         self:onLightAttackHurt(battler, enemy, damage, stretch, crit)
-    end)
-
-    sprite:play(2/30, false, function(this) 
-        this:remove()
-        TableUtils.removeValue(enemy.dmg_sprites, this)
     end)
 
     return false

@@ -1,23 +1,9 @@
----@class RandomEncounter
----@field id string
----@field population integer? Number of violent defeats before the empty encounter is used.
----@field initial_minimum_steps integer
----@field initial_random_steps integer
----@field minimum_steps integer
----@field random_steps integer
----@field empty_steps integer
----@field use_population_factor boolean
----@field bubble string?
----@field empty_encounter string
----@field encounters string[]
----@field light boolean
----@overload fun(...) : RandomEncounter
 local RandomEncounter = Class()
 
 function RandomEncounter:init()
     -- The amount of enemies that can be defeated violently
     self.population = nil
-    
+
     -- The amount of steps it takes to start a random encounter initially
     self.initial_minimum_steps = 20
     -- A random amount of steps that will be added to the step counter initially
@@ -28,25 +14,24 @@ function RandomEncounter:init()
     self.random_steps = 15
     -- The amount of steps it takes to start an empty encounter
     self.empty_steps = 20
-    
+
     -- Whether the steps amount will increase when not that many monsters left
     self.use_population_factor = true
-    
+
     -- The bubble that should appear when a random encounter is triggered
     -- If this is nil, the battle starts instantly
     self.bubble = "effects/alert"
-    
+
     -- The encounter that will happen if the entire population was defeated violently
     self.empty_encounter = "_empty"
-    
+
     -- Table with the encounters that can be triggered by this random encounter
     self.encounters = {}
-    
+
     -- Whether the encounters are a light or dark encounters
     self.light = true
 end
 
----@param default boolean
 function RandomEncounter:resetSteps(default)
     if not self:populationKilled() then
         local minimum_steps = default and self.initial_minimum_steps or self.minimum_steps
@@ -93,8 +78,13 @@ function RandomEncounter:start()
         if self.bubble then
             Game.lock_movement = true
             Mod.libs["magical-glass"].initiating_random_encounter = true
-            local timer = (15 + MathUtils.random(5)) / 30
-            Game.world.player:alert(timer, {layer = WORLD_LAYERS["above_events"], sprite = self.bubble, callback = function() Game:encounter(self:getNextEncounter(), true, nil, nil, self.light);Mod.libs["magical-glass"].random_encounter = self;Game.lock_movement = false;Mod.libs["magical-glass"].initiating_random_encounter = nil end})
+            self.alert = Game.world.player:alert(nil, { sprite = self.bubble, callback = function()
+                Game:encounter(self:getNextEncounter(), true, nil, nil, self.light)
+                Mod.libs["magical-glass"].random_encounter = self
+                Game.lock_movement = false
+                Mod.libs["magical-glass"].initiating_random_encounter = nil
+                self.alert = nil
+            end })
         else
             Game:encounter(self:getNextEncounter(), true, nil, nil, self.light)
             Mod.libs["magical-glass"].random_encounter = self
@@ -102,22 +92,16 @@ function RandomEncounter:start()
     end
 end
 
----@param flag string
----@param value number
 function RandomEncounter:setFlag(flag, value)
-    Game:setFlag("randomencounter#"..self.id..":"..flag, value)
+    Game:setFlag("randomencounter#" .. self.id .. ":" .. flag, value)
 end
 
----@param flag string
----@param default boolean
 function RandomEncounter:getFlag(flag, default)
-    return Game:getFlag("randomencounter#"..self.id..":"..flag, default)
+    return Game:getFlag("randomencounter#" .. self.id .. ":" .. flag, default)
 end
 
----@param flag string
----@param amount number
 function RandomEncounter:addFlag(flag, amount)
-    return Game:addFlag("randomencounter#"..self.id..":"..flag, amount)
+    return Game:addFlag("randomencounter#" .. self.id .. ":" .. flag, amount)
 end
 
 return RandomEncounter

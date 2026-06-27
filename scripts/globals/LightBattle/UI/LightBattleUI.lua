@@ -31,7 +31,7 @@ function LightBattleUI:init()
     Game.battle.arena:addChild(self.choice_box)
     
     self.choice_option = {}
-    for i = 1, 2 do
+    for i = 1, 4 do
         self.choice_option[i] = Text("", 63, 15 + 32 * (i-1), nil, nil, {["font"] = "main_mono"})
         self.choice_option[i].line_offset = 4
         self.choice_box:addChild(self.choice_option[i])
@@ -153,8 +153,8 @@ function LightBattleUI:endAttack()
 
     if self.attack_box then
         self.attack_box.fading = true
-        for _, lane in ipairs(self.attack_box.lanes) do
-            for _, bolt in ipairs(lane.bolts) do
+        for _, data in ipairs(self.attack_box.attacks) do
+            for _, bolt in ipairs(data.bolts) do
                 bolt:remove()
             end
         end
@@ -423,7 +423,7 @@ function LightBattleUI:drawState()
             end
         end
         
-        local letters = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"}
+        local letters = StringUtils.splitFast(table.concat(ALPHABET, ";"):upper(), ";")
         
         for _, enemy in pairs(enemies) do
             if enemy then

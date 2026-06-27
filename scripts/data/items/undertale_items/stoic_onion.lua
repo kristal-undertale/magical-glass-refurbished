@@ -42,18 +42,18 @@ function item:getWorldUseText(target)
     local message = ""
     local picker = MathUtils.round(MathUtils.random(1, 10))
     if picker <= 2 then
-        message = "\n* "..target:getNameOrYou().." didn't cry..."
+        message = "\n* " .. target:getNameOrYou() .. " didn't cry..."
     end
-    return "* "..target:getNameOrYou().." ate the Stoic Onion."..message
+    return "* " .. target:getNameOrYou() .. " ate the Stoic Onion." .. message
 end
 
 function item:getLightBattleText(user, target)
     local message = ""
     local picker = MathUtils.round(MathUtils.random(1, 10))
     if picker <= 2 then
-        message = "\n* "..target.chara:getNameOrYou().." didn't cry..."
+        message = "\n* " .. target.chara:getNameOrYou() .. " didn't cry..."
     end
-    return "* "..target.chara:getNameOrYou().." ate the Stoic Onion."..message
+    return "* " .. target.chara:getNameOrYou() .. " ate the Stoic Onion." .. message
 end
 
 return item

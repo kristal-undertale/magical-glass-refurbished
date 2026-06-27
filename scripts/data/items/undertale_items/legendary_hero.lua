@@ -50,7 +50,7 @@ function item:getLightBattleText(user, target, buff)
     if buff then
         message = "\n* ATTACK increased by 4!"
     end
-    return "* " ..target.chara:getNameOrYou().." "..self:getUseMethod(target.chara).." the "..self.name.."."..message
+    return "* " ..target.chara:getNameOrYou() .. " " .. self:getUseMethod(target.chara) .. " the " .. self.name .. "." .. message
 end
 
 function item:getBattleText(user, target)
@@ -71,14 +71,14 @@ function item:onLightBattleUse(user, target)
     end
     local amount = self:getBattleHealAmount(target.chara.id)
 
-    for _,equip in ipairs(user.chara:getEquipment()) do
+    for _, equip in ipairs(user.chara:getEquipment()) do
         if equip.getHealBonus then
             amount = amount + equip:getHealBonus()
         end
     end
 
     target:heal(amount)
-    Game.battle:battleText(self:getLightBattleText(user, target, buff).."\n"..self:getLightBattleHealingText(user, target, amount))
+    Game.battle:battleText(self:getLightBattleText(user, target, buff) .. "\n" .. self:getLightBattleHealingText(user, target, amount))
     return true
 end
 
@@ -88,7 +88,7 @@ function item:onBattleUse(user, target)
     end
     local amount = self:getBattleHealAmount(target.chara.id)
 
-    for _,equip in ipairs(user.chara:getEquipment()) do
+    for _, equip in ipairs(user.chara:getEquipment()) do
         if equip.getHealBonus then
             amount = amount + equip:getHealBonus()
         end

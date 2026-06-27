@@ -1,10 +1,5 @@
----@class LightHelpWindow : Object
----@overload fun(...) : LightHelpWindow
 local LightHelpWindow, super = Class(Object)
 
----@param x number
----@param y number
----@param top number
 function LightHelpWindow:init(x, y, top)
     super.init(self, x, y)
 
@@ -21,10 +16,10 @@ function LightHelpWindow:init(x, y, top)
     self.box_line.line_width = 5
     self.box_fill:addChild(self.box_line)
 
-    self.description_text = Text("", 14, 1, 539, 34, {color = COLORS.gray, font = "main_mono"})
+    self.description_text = Text("", 14, 1, 539, 34, { color = COLORS.gray, font = "main_mono" })
     self.box_fill:addChild(self.description_text)
 
-    self.cost_text = Text("", 10, 1, 539, 34, {color = MG_PALETTE["tension_desc"], align = "right", font = "main_mono"})
+    self.cost_text = Text("", 10, 1, 539, 34, { align = "right", font = "main_mono" })
     self.box_fill:addChild(self.cost_text)
 end
 
@@ -36,29 +31,29 @@ function LightHelpWindow:update()
             self.showing = true
             if self.top then
                 self.y = 272
-                Game.battle.timer:tween(6 / 30, self, {y = 235}, "out-cubic")
+                Game.battle.timer:tween(6 / 30, self, { y = 235 }, "out-cubic")
                 if Game.battle.tension_bar then
-                    Game.battle.timer:tween(6 / 30, Game.battle.tension_bar, {y = 16}, "out-cubic")
+                    Game.battle.timer:tween(6 / 30, Game.battle.tension_bar, { y = 16 }, "out-cubic")
                 end
             else
                 self.y = 369.5
-                Game.battle.timer:tween(6 / 30, self, {y = 407}, "out-cubic")
+                Game.battle.timer:tween(6 / 30, self, { y = 407 }, "out-cubic")
             end
         end
     else
         if self.showing then
             self.showing = false
             if self.top then
-                Game.battle.timer:tween(6 / 30, self, {y = 272}, "out-cubic")
+                Game.battle.timer:tween(6 / 30, self, { y = 272 }, "out-cubic")
                 if Game.battle.tension_bar then
-                    Game.battle.timer:tween(6 / 30, Game.battle.tension_bar, {y = 54}, "out-cubic")
+                    Game.battle.timer:tween(6 / 30, Game.battle.tension_bar, { y = 54 }, "out-cubic")
                 end
             else
-                Game.battle.timer:tween(6 / 30, self, {y = 369.5}, "out-cubic")
+                Game.battle.timer:tween(6 / 30, self, { y = 369.5 }, "out-cubic")
             end
         end
     end
-    
+
     super.update(self)
 end
 
@@ -68,24 +63,24 @@ function LightHelpWindow:draw()
     local objects = TableUtils.copy(self.box_fill.children)
     table.insert(objects, 1, self.box_fill)
     for _, object in ipairs(objects) do
-        object.debug_rect = {arena_ox, arena_oy, object.width, object.height}
+        object.debug_rect = { arena_ox, arena_oy, object.width, object.height }
     end
-    
+
     self.box_line.color = Game.battle.arena:getBorderColor()
     self.cost_text.color = Game.battle:hasReducedTension() and MG_PALETTE["tension_desc_reduced"] or MG_PALETTE["tension_desc"]
-    
+
     super.draw(self)
 end
 
----@param text string
+-- Replace new lines with a space, to allow inserting the description into a single line
 function LightHelpWindow:setDescription(text)
     local str = text:gsub('\n', ' ')
-    self.description_text:setText("[shake:"..Mod.libs["magical-glass"].light_battle_shake_text.."]" .. str)
+    self.description_text:setText("[shake:" .. Mod.libs["magical-glass"].light_battle_shake_text .. "]" .. str)
 end
 
 function LightHelpWindow:setTension(tension)
     if tension ~= 0 then
-        self.cost_text:setText("[shake:"..Mod.libs["magical-glass"].light_battle_shake_text.."]" .. tostring(tension).."% "..Kristal.getLibConfig("magical-glass", "light_battle_tp_name"))
+        self.cost_text:setText("[shake:" .. Mod.libs["magical-glass"].light_battle_shake_text .. "]" .. tostring(tension) .. "% " .. Kristal.getLibConfig("magical-glass", "light_battle_tp_name"))
     else
         self.cost_text:setText("")
     end

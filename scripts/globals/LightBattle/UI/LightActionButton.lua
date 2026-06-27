@@ -1,18 +1,14 @@
----@class LightActionButton : Object
----@overload fun(...) : LightActionButton
 local LightActionButton, super = Class(Object)
 
----@param type string
----@param x number
----@param y number
 function LightActionButton:init(type, battler, x, y)
     super.init(self, x, y)
 
     self.type = type
     self.battler = battler
-    
+
     self.texture = Assets.getTexture("ui/lightbattle/btn/" .. type)
     self.hover_texture = Assets.getTexture("ui/lightbattle/btn/" .. type .. "_h")
+    self.special_texture = Assets.getTexture("ui/lightbattle/btn/" .. type .. "_a")
     self.disabled_texture = Assets.getTexture("ui/lightbattle/btn/" .. type .. "_d")
 
     self.width = self.texture:getWidth()
@@ -186,7 +182,7 @@ function LightActionButton:onMercySelect()
             ["name"] = "Defend",
             ["special"] = "defend",
             ["callback"] = function(menu_item)
-                Game.battle:pushAction("DEFEND", nil, {tp = -Game.battle:getDefendTension(self.battler)})
+                Game.battle:pushAction("DEFEND", nil, { tp = -Game.battle:getDefendTension(self.battler) })
             end
         })
     end
@@ -210,7 +206,7 @@ function LightActionButton:onMercySelect()
                         chance = chance + ((equip:getFleeBonus() / #Game.battle.party) or 0)
                     end
                 end
-                
+
                 chance = math.floor(chance)
 
                 if chance >= MathUtils.round(MathUtils.random(1, 100)) then
@@ -254,6 +250,41 @@ function LightActionButton:unselect()
     self.battler.manual_spare = false
 end
 
+function LightActionButton:hasSpecial()
+    if Kristal.getLibConfig("magical-glass", "highlight_default_buttons") then
+        if self.type == "magic" then
+            if self.battler then
+                local has_tired = false
+                for _, enemy in ipairs(Game.battle:getActiveEnemies()) do
+                    if enemy.tired then
+                        has_tired = true
+                        break
+                    end
+                end
+                if has_tired then
+                    local has_pacify = false
+                    for _, spell in ipairs(self.battler.chara:getSpells()) do
+                        if spell and spell:hasTag("spare_tired") then
+                            if spell:isUsable(self.battler.chara) and spell:getTPCost(self.battler.chara) <= Game:getTension() then
+                                has_pacify = true
+                                break
+                            end
+                        end
+                    end
+                    return has_pacify
+                end
+            end
+        elseif self.type == "spare" or self.type == "mercy" then
+            for _, enemy in ipairs(Game.battle:getActiveEnemies()) do
+                if enemy.mercy >= 100 then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
 function LightActionButton:draw()
     if self.disabled then
         Draw.draw(self.disabled_texture or self.texture)
@@ -261,6 +292,11 @@ function LightActionButton:draw()
         Draw.draw(self.hover_texture or self.texture)
     else
         Draw.draw(self.texture)
+        if self.selectable and self.special_texture and self:hasSpecial() then
+            local r, g, b, a = self:getDrawColor()
+            Draw.setColor(r, g, b, a * (0.4 + math.sin((Kristal.getTime() * 30) / 6) * 0.4))
+            Draw.draw(self.special_texture)
+        end
     end
 
     super.draw(self)

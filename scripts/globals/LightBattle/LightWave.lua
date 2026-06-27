@@ -1,39 +1,30 @@
----@class LightWave : Wave
----@overload fun(...) : LightWave
 local LightWave, super = Class(Wave)
 
 function LightWave:init()
     super.init(self)
-    
-    self.allow_duplicates = true
 
+    -- Whether to darken the battle background while this wave is active
+    -- If set to 'alt', it will use the Undertale version of darkening (like in the battle against Undyne)
     self.darken = false
+    -- Whether to remove the wave after the defending state ends
     self.auto_clear = true
 end
 
----@param width number
----@param height number
 function LightWave:setArenaSize(width, height)
     self.arena_width = width
     self.arena_height = height or width
 end
 
----@param x number
----@param y number
 function LightWave:setArenaPosition(x, y)
     self.arena_x = x
     self.arena_y = y
 end
 
----@param x number
----@param y number
 function LightWave:setSoulPosition(x, y)
     self.soul_start_x = x
     self.soul_start_y = y
 end
 
----@param x number
----@param y number
 function LightWave:setSoulOffset(x, y)
     self.soul_offset_x = x
     self.soul_offset_y = y
@@ -82,7 +73,7 @@ function LightWave:spawnBulletTo(parent, bullet, ...)
     end
     new_bullet:onWaveSpawn(self)
     if not new_bullet:includes(LightBullet) then
-        error("Attempted to use Bullet in a LightBattle. Convert \""..bullet.."\" to a LightBullet")
+        error("Attempted to use Bullet in a LightBattle. Convert \"" .. bullet .. "\" to a LightBullet")
     end
     return new_bullet
 end

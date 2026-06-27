@@ -47,13 +47,6 @@
         /////
         "light_battle_tp_name": "TP",
         
-        ///// Light level name
-        // The name (and short name) of light levels.
-        /////
-        "light_level_name": "LOVE",
-        "light_level_name_short": "LV",
-        "light_level_name_dark": "LV",
-
         ///// UNDERTALE Text Skipping
         // Disables text skipping in ANY textbox when holding down cancel or menu.
         /////
@@ -256,5 +249,15 @@
         // Determines whether the library is in its debug mode state.
         /////
         "debug": false,
+        ///// Highlight Default Buttons
+        // Whether to highlight the MAGIC or MERCY/SPARE buttons when the enemy can be spared though their action.
+        /////
+        "highlight_default_buttons": false,
+        
+        ///// Default Invulnerablity Time
+        // The default length of invulnerability given to the player when hit by a bullet in the light world, in frames.
+        // (30 frames = 1 second)
+        /////
+        "default_invuln_time": 30,
     }
 }

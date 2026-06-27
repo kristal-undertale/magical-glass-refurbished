@@ -77,14 +77,14 @@ function item:getLightBattleText(user, target)
     local text
     if #Game.inventory:getStorage("items") + 1 < Game.inventory:getStorage("items").max then
         text = {
-            "* "..user.chara:getNameOrYou().." used the Dog Residue.",
+            "* " .. user.chara:getNameOrYou() .. " used the Dog Residue.",
             "* The rest of your inventory\nfilled up with Dog Residue."
         }
     else
         text = {
-            "* "..user.chara:getNameOrYou().." used the Dog Residue.",
+            "* " .. user.chara:getNameOrYou() .. " used the Dog Residue.",
             "* ...",
-            "* "..user.chara:getNameOrYou().." finished using it.",
+            "* " .. user.chara:getNameOrYou() .. " finished using it.",
             "* An uneasy atmosphere fills\nthe room."
         }
     end
@@ -139,7 +139,7 @@ function item:getBattleText(user, target)
     else
         text = "* An uneasy atmosphere fills the room."
     end
-    
+
     return super.getBattleText(self, user, target) .. "\n" .. text
 end
 

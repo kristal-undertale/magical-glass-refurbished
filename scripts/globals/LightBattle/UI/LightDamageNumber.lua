@@ -1,12 +1,8 @@
----@class LightDamageNumber : Object
----@overload fun(...) : LightDamageNumber
 local LightDamageNumber, super = Class(Object)
 
----@param x number
----@param y number
 function LightDamageNumber:init(msg_type, arg, x, y, color, enemy)
     super.init(self, x, y)
-    
+
     self.font = Assets.getFont("lwdmg")
 
     self:setOrigin(0.5)
@@ -14,13 +10,13 @@ function LightDamageNumber:init(msg_type, arg, x, y, color, enemy)
     self.physics.speed_y = -4
     self.physics.gravity = 0.5
     self.physics.gravity_direction = math.rad(90)
-    
+
     self.enemy = enemy
 
     self.layer = LIGHT_BATTLE_LAYERS["damage_numbers"]
 
     self.type = msg_type or "text"
-    
+
     self.color = color or (self.type == "damage" and COLORS.red or COLORS.silver)
 
     if self.type == "text" then
@@ -29,7 +25,7 @@ function LightDamageNumber:init(msg_type, arg, x, y, color, enemy)
         if type(arg) == "table" then
             self.special_messages = arg
         elseif arg then
-            self.special_messages = {arg}
+            self.special_messages = { arg }
         elseif arg == false then
             self.special_messages = false
         end
@@ -42,6 +38,7 @@ function LightDamageNumber:init(msg_type, arg, x, y, color, enemy)
         self.amount = arg or 0
         if self.type == "mercy" then
             if self.amount == 100 then
+                -- 100% mercy
                 self.color = COLORS.lime
             else
                 self.color = COLORS.yellow
@@ -49,17 +46,19 @@ function LightDamageNumber:init(msg_type, arg, x, y, color, enemy)
             if self.amount >= 0 then
                 self.text = "+" .. self.amount .. "%"
             else
+                -- Mercy reduction
                 self.text = self.amount .. "%"
             end
         else
             self.text = tostring(self.amount)
         end
+
         self.text = self.text:upper()
     end
 
     if self.type ~= "special" then
         if self.message then
-            self.texture = Assets.getTexture("ui/lightbattle/msg/"..self.message)
+            self.texture = Assets.getTexture("ui/lightbattle/msg/" .. self.message)
             self.width = self.texture:getWidth()
             self.height = self.texture:getHeight()
         elseif self.text then
@@ -70,7 +69,7 @@ function LightDamageNumber:init(msg_type, arg, x, y, color, enemy)
 
     self.timer = 0
     self.special_timer = 0
-    
+
     self.special_messages = self.special_messages or self.special_messages ~= false and type(self.enemy.special_messages) == "table" and self.enemy.special_messages or {
         "Don't worry about it.",
         "Absorbed",
@@ -79,7 +78,7 @@ function LightDamageNumber:init(msg_type, arg, x, y, color, enemy)
         "nope",
         "FAILURE"
     }
-    
+
     self.special_message = TableUtils.pick(self.special_messages)
 
     self.start_x = nil
@@ -97,6 +96,7 @@ end
 
 function LightDamageNumber:onAdd(parent)
     self.parent = parent
+
     for _, v in ipairs(parent.children) do
         if isClass(v) and (v:includes(LightDamageNumber)) then
             if self.kill_others then
@@ -108,6 +108,7 @@ function LightDamageNumber:onAdd(parent)
             end
         end
     end
+
     self.killing = false
 end
 
@@ -144,7 +145,7 @@ function LightDamageNumber:update()
         self.enemy.active_msg = self.enemy.active_msg - 1
         return
     end
-    
+
     if self.kill_condition_succeed or self.kill_condition() then
         self.kill_condition_succeed = true
     end

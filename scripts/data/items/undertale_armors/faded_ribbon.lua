@@ -32,7 +32,7 @@ function item:init()
     self.bonuses = {
         defense = 3
     }
-    
+
     self.can_equip = {
         ["susie"] = false
     }

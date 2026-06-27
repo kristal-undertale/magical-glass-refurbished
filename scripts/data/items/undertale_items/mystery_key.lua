@@ -44,11 +44,11 @@ function item:onWorldUse()
 end
 
 function item:getLightBattleText(target)
-    return "* "..target.chara:getNameOrYou().." used the Mystery Key.[wait:10]\n* But nothing happened."
+    return "* " .. target.chara:getNameOrYou() .. " used the Mystery Key.[wait:10]\n* But nothing happened."
 end
 
 function item:getBattleText(user, target)
-    return {"* "..user.chara:getName().." used the "..self:getUseName().."!", "* But nothing happened..."}
+    return { "* " .. user.chara:getName() .. " used the " .. self:getUseName() .. "!", "* But nothing happened..." }
 end
 
 function item:onToss()

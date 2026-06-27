@@ -36,7 +36,7 @@ function item:onBattleSelect(user, target)
 end
 
 function item:onWorldUse()
-    Game.world:showText({"* You tried to open the letter,[wait:5]\nbut...","* It's been shut so tightly,[wait:5]\nyou'd need a chainsaw in\norder to open it."})
+    Game.world:showText({ "* You tried to open the letter,[wait:5]\nbut...", "* It's been shut so tightly,[wait:5]\nyou'd need a chainsaw in\norder to open it." })
     return false
 end
 

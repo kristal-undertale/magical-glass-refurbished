@@ -1,35 +1,19 @@
----@class LightBullet : Bullet
----@overload fun(...) : LightBullet
 local LightBullet, super = Class(Bullet)
 
----@param x number
----@param y number
 function LightBullet:init(x, y, texture)
     super.init(self, x, y, texture)
-    
+
+    -- 'alt' is whether to only remove the bullet if you took damage from it (colliding with it while not having invulnerability frames)
     self.destroy_on_hit = "alt"
-    self.layer = LIGHT_BATTLE_LAYERS["bullets"]
+    -- Whether the bullet can damage you even when it's your turn (similar to Sans' menu bones)
     self.can_collide_while_not_defending = false
+
+    self.layer = LIGHT_BATTLE_LAYERS["bullets"]
 end
 
 function LightBullet:onCollide(soul)
     if Game.battle:getState() == "DEFENDING" or self.can_collide_while_not_defending then
-        local moving = soul.moving_x ~= 0 or soul.moving_y ~= 0
-        if self:getType() == "green" then
-            self:onHeal(soul)
-            self.destroy_on_hit = true
-        end
-        
-        if self:getType() == "blue" and moving or self:getType() == "orange" and not moving or not TableUtils.contains({"blue", "orange"}, self:getType()) then
-            if soul.inv_timer == 0 then
-                self:onDamage(soul)
-                if self.destroy_on_hit then
-                    self:remove()
-                end
-            elseif self.destroy_on_hit == true then
-                self:remove()
-            end
-        end
+        super.onCollide(self, soul)
     end
 end
 

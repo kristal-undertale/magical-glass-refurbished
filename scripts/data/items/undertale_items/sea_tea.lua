@@ -44,7 +44,7 @@ function item:init()
 end
 
 function item:getLightBattleText(user, target, boost)
-    return "* "..target.chara:getNameOrYou().." "..self:getUseMethod(target.chara).." the Sea Tea."..(boost and "\n* Your SPEED boosts!" or "")
+    return "* " .. target.chara:getNameOrYou() .. " " .. self:getUseMethod(target.chara) .. " the Sea Tea." .. (boost and "\n* Your SPEED boosts!" or "")
 end
 
 function item:onLightBattleUse(user, target)
@@ -62,7 +62,7 @@ function item:onLightBattleUse(user, target)
         end
     end
     target:heal(amount)
-    Game.battle:battleText(self:getLightBattleText(user, target, boost).."\n"..self:getLightBattleHealingText(user, target, amount))
+    Game.battle:battleText(self:getLightBattleText(user, target, boost) .. "\n" .. self:getLightBattleHealingText(user, target, amount))
     return true
 end
 

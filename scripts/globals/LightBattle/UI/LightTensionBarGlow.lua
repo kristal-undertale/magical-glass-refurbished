@@ -1,9 +1,5 @@
----@class LightTensionBarGlow : Object
----@overload fun(...) : LightTensionBarGlow
 local LightTensionBarGlow, super = Class(Object)
 
----@param x number
----@param y number
 function LightTensionBarGlow:init(x, y)
     super.init(self, x, y)
 

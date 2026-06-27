@@ -1,9 +1,5 @@
----@class LightSoul : Object
----@overload fun(...) : LightSoul
 local LightSoul, super = Class(Object)
 
----@param x number
----@param y number
 function LightSoul:init(x, y, color)
     super.init(self, x, y)
 
@@ -20,7 +16,7 @@ function LightSoul:init(x, y, color)
     self.sprite.inherit_color = true
     self:addChild(self.sprite)
 
-    self.debug_rect = {-8, -8, 16, 16}
+    self.debug_rect = { -8, -8, 16, 16 }
 
     self.width = self.sprite.width
     self.height = self.sprite.height
@@ -49,7 +45,7 @@ function LightSoul:init(x, y, color)
     self.target_x = x
     self.target_y = y
     self.timer = 0
-    self.transitioning = false
+    self.transitioning = Game.battle:getState() ~= "DEFENDING" or not self.visible
     self.speed = Game.battle.soul_speed
 
     self.inv_timer = 0
@@ -71,14 +67,13 @@ function LightSoul:init(x, y, color)
     self.noclip = false
     self.slope_correction = true
 
-    self.transition_destroy = false
-
-    self.shard_x_table = {-2, 0, 2, 8, 10, 12}
-    self.shard_y_table = {0, 3, 6}
+    self.shard_x_table = { -2, 0, 2, 8, 10, 12 }
+    self.shard_y_table = { 0, 3, 6 }
 
     self.can_move = true
     self.allow_focus = true
-    
+
+    -- You can only graze if the tension bar is enabled
     self.graze_collider.collidable = Game.battle.tension
 end
 
@@ -108,7 +103,7 @@ function LightSoul:shatter(count)
         shard.physics.speed = 7
         shard.physics.gravity = 0.2
         shard.layer = LIGHT_BATTLE_LAYERS["above_arena_border"] + 5
-        shard:play(5/30)
+        shard:play(5 / 30)
         table.insert(self.shards, shard)
         self.stage:addChild(shard)
     end
@@ -117,39 +112,14 @@ function LightSoul:shatter(count)
     Game.battle.soul = nil
 end
 
----@param x number
----@param y number
----@param should_destroy boolean
-function LightSoul:transitionTo(x, y, should_destroy)
-    if self.graze_sprite then
-        self.graze_sprite.timer = 0
-        self.graze_sprite.visible = false
-    end
-    self.transitioning = true
-    self.original_x = self.x
-    self.original_y = self.y
-    self.target_x = x
-    self.target_y = y
-    self.timer = 0
-    if should_destroy ~= nil then
-        self.transition_destroy = should_destroy
-    else
-        self.transition_destroy = false
-    end
-end
-
 function LightSoul:isMoving()
     return self.moving_x ~= 0 or self.moving_y ~= 0
 end
 
----@param x number
----@param y number
 function LightSoul:getExactPosition(x, y)
     return self.x + self.partial_x, self.y + self.partial_y
 end
 
----@param x number
----@param y number
 function LightSoul:setExactPosition(x, y)
     self.x = math.floor(x)
     self.partial_x = x - self.x
@@ -157,9 +127,6 @@ function LightSoul:setExactPosition(x, y)
     self.partial_y = y - self.y
 end
 
----@param x number
----@param y number
----@param speed number
 function LightSoul:move(x, y, speed)
     local movex, movey = x * (speed or 1), y * (speed or 1)
 
@@ -172,8 +139,6 @@ function LightSoul:move(x, y, speed)
     return moved, collided
 end
 
----@param amount number
----@param move_y number
 function LightSoul:moveX(amount, move_y)
     local last_collided = self.last_collided_x and (MathUtils.sign(amount) == self.last_collided_x)
 
@@ -194,8 +159,6 @@ function LightSoul:moveX(amount, move_y)
     end
 end
 
----@param amount number
----@param move_x number
 function LightSoul:moveY(amount, move_x)
     local last_collided = self.last_collided_y and (MathUtils.sign(amount) == self.last_collided_y)
 
@@ -216,8 +179,6 @@ function LightSoul:moveY(amount, move_x)
     end
 end
 
----@param amount number
----@param move_y number
 function LightSoul:moveXExact(amount, move_y)
     local sign = MathUtils.sign(amount)
     for i = sign, amount, sign do
@@ -268,8 +229,6 @@ function LightSoul:moveXExact(amount, move_y)
     return true
 end
 
----@param amount number
----@param move_x number
 function LightSoul:moveYExact(amount, move_x)
     local sign = MathUtils.sign(amount)
     for i = sign, amount, sign do
@@ -320,7 +279,6 @@ function LightSoul:moveYExact(amount, move_x)
     return true
 end
 
----@param amount number
 function LightSoul:onDamage(bullet, amount)
     -- Can be overridden, called when the soul actually takes damage from a bullet
 end
@@ -367,7 +325,9 @@ end
 
 function LightSoul:update()
     self.speed = Game.battle.soul_speed
-    
+    -- Whether the soul isn't in a battle state
+    self.transitioning = Game.battle:getState() ~= "DEFENDING" or not self.visible
+
     -- Input movement
     if self.can_move then
         self:doMovement()
@@ -401,7 +361,7 @@ function LightSoul:update()
                 else
                     Assets.playSound("graze")
                     Game:giveTension(bullet:getGrazeTension() * self.graze_tp_factor)
-                    if Game.battle.wave_timer < Game.battle.wave_length - (1/3) then
+                    if Game.battle.wave_timer < Game.battle.wave_length - (1 / 3) then
                         Game.battle.wave_timer = Game.battle.wave_timer + ((bullet.time_bonus / 30) * self.graze_time_factor)
                     end
                     self.graze_sprite.timer = 1 / 3
@@ -417,9 +377,10 @@ function LightSoul:update()
         self:onCollide(bullet)
     end
 
+    -- Invulnerability frames flash faster in Undertale
     if self.inv_timer > 0 then
         self.inv_flash_timer = self.inv_flash_timer + DT
-        local amt = math.floor(self.inv_flash_timer / (2 / 30)) -- flashing is faster in ut
+        local amt = math.floor(self.inv_flash_timer / (2 / 30))
         if (amt % 2) == 1 then
             self.sprite:setColor(0.5, 0.5, 0.5)
         else
@@ -440,6 +401,27 @@ function LightSoul:draw()
         self.collider:draw(0, 1, 0)
         if self.graze_collider.collidable then
             self.graze_collider:draw(1, 1, 1, 0.33)
+        end
+    end
+end
+
+function LightSoul:setMonsterSoul(value)
+    if self.sprite then
+        if value == true then
+            self.sprite:setSprite("player/monster/heart_light")
+        elseif value == false then
+            self.sprite:setSprite("!player/heart_light")
+        else
+            self.sprite:setSprite("player/heart_light")
+        end
+    end
+    if self.graze_sprite then
+        if value == true then
+            self.graze_sprite.texture = Assets.getTexture("player/monster/graze")
+        elseif value == false then
+            self.graze_sprite.texture = Assets.getTexture("!player/graze")
+        else
+            self.graze_sprite.texture = Assets.getTexture("player/graze")
         end
     end
 end

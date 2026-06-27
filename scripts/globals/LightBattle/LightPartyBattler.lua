@@ -1,5 +1,3 @@
----@class LightPartyBattler
----@overload fun(...) : LightPartyBattler
 local LightPartyBattler = Class()
 
 function LightPartyBattler:init(chara)
@@ -13,10 +11,14 @@ function LightPartyBattler:init(chara)
     self.sleeping = false
 
     self.targeted = false
-    
+
+    -- Whether the party battler has the save button
     self.has_save = false
+    -- Whether the party battler will have to manually choose who to spare instead of all the enemies
     self.manual_spare = false
-    
+    -- Whether the party battler will use the simplified damage taken calculation
+    self.simple_damage = false
+
     -- Karma (KR) calculations
     self.karma = 0
     self.karma_timer = 0
@@ -35,12 +37,16 @@ function LightPartyBattler:canTarget()
     end
 end
 
----@param amount number
 function LightPartyBattler:calculateDamage(amount)
+    if self.simple_damage then
+        self.simple_damage = false
+        return math.max(self:calculateDamageSimple(amount), 1)
+    end
+
     local def = self.chara:getStat("defense")
     local max_hp = self.chara:getStat("health")
     local hp = self.chara:getHealth()
-    
+
     if Game:isLight() then
         local bonus = hp > 20 and math.min(1 + math.floor((hp - 20) / 10), 8) or 0
         amount = MathUtils.round(amount + bonus - def / 5)
@@ -65,7 +71,6 @@ function LightPartyBattler:calculateDamage(amount)
     return math.max(amount, 1)
 end
 
----@param amount number
 function LightPartyBattler:calculateDamageSimple(amount)
     if Game:isLight() then
         return math.ceil(amount - (self.chara:getStat("defense") / 5))
@@ -80,8 +85,8 @@ function LightPartyBattler:getElementReduction(element)
     if (element == 0) then return 1 end
 
     local armor_elements = {
-        {element = 0, element_reduce_amount = 0},
-        {element = 0, element_reduce_amount = 0}
+        { element = 0, element_reduce_amount = 0 },
+        { element = 0, element_reduce_amount = 0 }
     }
 
     local reduction = 1
@@ -96,15 +101,15 @@ function LightPartyBattler:getElementReduction(element)
     return math.max(0.25, reduction)
 end
 
----@param amount number
----@param exact boolean
 function LightPartyBattler:hurt(amount, exact, color, options)
+    if exact == "simple" then exact = nil;self.simple_damage = true end
+
     options = options or {}
-    
+
     local swoon = options["swoon"]
-    
+
     self:setSleeping(false)
-    Game.battle:shakeCamera(2, 2, 0.35)
+    Game.battle:shake(true)
 
     if not options["all"] then
         Assets.playSound("hurt")
@@ -115,6 +120,9 @@ function LightPartyBattler:hurt(amount, exact, color, options)
             end
             local element = 0
             amount = math.ceil((amount * self:getElementReduction(element)))
+        end
+        for _, item in ipairs(self.chara:getEquipment()) do
+            amount = item:onLightBattleDamage(amount, swoon, false) or amount
         end
 
         self:removeHealth(amount, swoon)
@@ -128,13 +136,14 @@ function LightPartyBattler:hurt(amount, exact, color, options)
                 amount = math.ceil((3 * amount) / 4)
             end
         end
-        
+        for _, item in ipairs(self.chara:getEquipment()) do
+            amount = item:onLightBattleDamage(amount, swoon, true) or amount
+        end
+
         self:removeHealthBroken(amount, swoon)
     end
 end
 
----@param amount number
----@param swoon boolean
 function LightPartyBattler:removeHealth(amount, swoon)
     if (self.chara:getHealth() <= 0) then
         amount = MathUtils.round(amount / 4)
@@ -155,8 +164,6 @@ function LightPartyBattler:removeHealth(amount, swoon)
     self:checkHealth(swoon)
 end
 
----@param amount number
----@param swoon boolean
 function LightPartyBattler:removeHealthBroken(amount, swoon)
     self.chara:setHealth(self.chara:getHealth() - amount)
     if (self.chara:getHealth() <= 0) then
@@ -176,7 +183,7 @@ function LightPartyBattler:down()
     self.is_down = true
     self.sleeping = false
     if self.action then
-        Game.battle:removeAction(Game.battle:getPartyIndex(self.chara.id))
+        Game.battle:removeAction(Game.battle:getPartyIndex(self.chara.id), true)
     end
     Game.battle:checkGameOver()
 end
@@ -192,7 +199,7 @@ function LightPartyBattler:setSleeping(sleeping)
         if self.is_down then return end
         self.sleeping = true
         if self.action then
-            Game.battle:removeAction(Game.battle:getPartyIndex(self.chara.id))
+            Game.battle:removeAction(Game.battle:getPartyIndex(self.chara.id), true)
         end
     else
         self.sleeping = false
@@ -203,8 +210,6 @@ function LightPartyBattler:revive()
     self.is_down = false
 end
 
----@param amount number
----@param playsound boolean
 function LightPartyBattler:heal(amount, playsound)
     Mod.libs["magical-glass"].heal_amount = amount
 
@@ -213,7 +218,6 @@ function LightPartyBattler:heal(amount, playsound)
     self:checkHealth(false)
 end
 
----@param swoon boolean
 function LightPartyBattler:checkHealth(swoon)
     if (not self.is_down) and self.chara:getHealth() <= 0 then
         if swoon then
@@ -234,7 +238,6 @@ function LightPartyBattler:isTargeted()
     return self.targeted
 end
 
----@param amount number
 function LightPartyBattler:addKarma(amount)
     self.karma = self.karma + amount
 end
@@ -256,21 +259,21 @@ function LightPartyBattler:updateKarma()
                 end
             end
             if self.inv_bonus >= 15 / 30 then
-                self.karma_bonus = TableUtils.pick({0,1})
+                self.karma_bonus = TableUtils.pick({ 0, 1 })
             end
             if self.inv_bonus >= 30 / 30 then
-                self.karma_bonus = TableUtils.pick({0,1,1})
+                self.karma_bonus = TableUtils.pick({ 0, 1, 1 })
             end
             if self.inv_bonus >= 45 / 30 then
                 self.karma_bonus = 1
             end
-            
+
             local function hurtKarma()
                 self.karma_timer = 0
                 self.chara:setHealth(self.chara:getHealth() - 1)
                 self.karma = self.karma - 1
             end
-            
+
             if self.karma_timer >= (1 + self.karma_bonus * 1) and self.karma >= 40 then
                 hurtKarma()
             end
@@ -294,7 +297,6 @@ function LightPartyBattler:updateKarma()
     end
 end
 
----@param value number
 function LightPartyBattler:toggleSaveButton(value)
     if value == nil then
         self.has_save = not self.has_save
@@ -313,7 +315,7 @@ function LightPartyBattler:update()
             self.chara:getArmor(i):onLightBattleUpdate(self)
         end
     end
-    
+
     self:updateKarma()
 end
 

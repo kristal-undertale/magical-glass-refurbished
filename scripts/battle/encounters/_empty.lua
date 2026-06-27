@@ -12,6 +12,7 @@ function encounter:init()
     self.music = nil
 end
 
+-- Replace the overworld music with the "But nobody came."
 function encounter:onStateChange(old, new)
     if old == "INTRO" and new == "ACTIONSELECT" then
         Game.world.music:stop()
@@ -21,6 +22,7 @@ function encounter:onStateChange(old, new)
     end
 end
 
+-- Replace the victory text with "* But nobody came." and prevent the gain of money or xp.
 function encounter:getVictoryText()
     return self.text
 end
