@@ -1,9 +1,9 @@
 {
     "auto": false,
-    "sprites": "ut_largest",
+    "sprites": "wide",
     "text_bounds": {
         "left": 30,
-        "top": 30,
+        "top": 10, //25,
         "width": 200,
         "height": 216
     }
