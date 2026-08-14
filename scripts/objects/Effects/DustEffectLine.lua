@@ -51,15 +51,15 @@ function DustEffectLine:init(texture, x, y, allow_black_pixels, after, speed)
                 Game.battle.timer:after(math.floor(delay / 3) / 30 * speed, function()
                     particle:fadeOutAndRemove(0.4 * speed)
                     particle.physics.gravity_direction = math.rad(-90)
-                    particle.physics.gravity = (MathUtils.random(0.25) + 0.1)
-                    particle.physics.speed_x = (MathUtils.random(2) - 1)
+                    particle.physics.gravity = (MathUtils.random(0.25) + 0.1) / (speed * speed)
+                    particle.physics.speed_x = (MathUtils.random(2) - 1) / speed
                 end)
             else
                 Game.world.timer:after(math.floor(delay / 3) / 30 * speed, function()
                     particle:fadeOutAndRemove(0.4 * speed)
                     particle.physics.gravity_direction = math.rad(-90)
-                    particle.physics.gravity = (MathUtils.random(0.25) + 0.1)
-                    particle.physics.speed_x = (MathUtils.random(2) - 1)
+                    particle.physics.gravity = (MathUtils.random(0.25) + 0.1) / (speed * speed)
+                    particle.physics.speed_x = (MathUtils.random(2) - 1) / speed
                 end)
             end
             

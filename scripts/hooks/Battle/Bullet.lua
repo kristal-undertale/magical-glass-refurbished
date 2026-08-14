@@ -5,7 +5,7 @@ function Bullet:init(x, y, texture)
 
     if Game:isLight() then
         -- Invulnerability timer to apply to the player when hit by this bullet
-        self.inv_timer = Kristal.getLibConfig("magical-glass", "default_invuln_time") / 30
+        self.inv_frames = Kristal.getLibConfig("magical-glass", "default_invuln_time")
     end
 
     -- The type of the bullet (white, blue, orange, green...)
@@ -68,7 +68,7 @@ function Bullet:onCollide(soul)
         self.destroy_on_hit = true
     end
     if self:getType() == "blue" and soul:isMoving() or self:getType() == "orange" and not soul:isMoving() or not TableUtils.contains({ "blue", "orange" }, self:getType()) then
-        if soul.inv_timer == 0 then
+        if not Game:hasInvulnerability() then
             self:onDamage(soul)
             if self.destroy_on_hit then
                 self:remove()
@@ -123,7 +123,9 @@ function Bullet:onDamage(soul)
                 best_amount = equip_amount
             end
         end
-        soul.inv_timer = soul.inv_timer + (best_amount or 0)
+        if Game:isLight() then
+            Game:setInvulnFrames(self:getInvulnFrames() + (best_amount or 0) * 30)
+        end
     end
 
     return battlers

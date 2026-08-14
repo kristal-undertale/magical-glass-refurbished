@@ -307,9 +307,13 @@ function Lib:onRegistered()
 end
 
 function Lib:init()
+    Game:registerEvent("encounterzone", function(data)
+        return EncounterZone(data)
+    end)
+    Game:registerEvent("storagebox", function(data)
+        return StorageBox(data.x, data.y, { data.width, data.height, data.polygon }, data.properties)
+    end)
 
-    -- print("Loaded Magical Glass: Redux " .. self.info.version .. "!")
-    
     -- Undertale Borders
     self.active_keys = {}
     self.flower_positions = {
@@ -325,8 +329,6 @@ function Lib:init()
     }
     self.idle_time = RUNTIME * 1000
     self.idle = false
-
-
 
     self.encounters_enabled = false
     self.steps_until_encounter = nil

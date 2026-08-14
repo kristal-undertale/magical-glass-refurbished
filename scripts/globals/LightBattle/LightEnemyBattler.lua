@@ -1156,6 +1156,10 @@ function LightEnemyBattler:spawnSpeechBubble(text, options)
         options["style"] = self.dialogue_bubble
     end
 
+    if not options["font"] and self.actor:getFont() then
+        options["font"] = self.actor:getFont()
+    end
+
     if not options["right"] then
         local x, y = self.sprite:getRelativePos(0, self.actor:getHeight() / 2, Game.battle)
         x, y = x - self.dialogue_offset[1], y + self.dialogue_offset[2]
@@ -1212,10 +1216,13 @@ function LightEnemyBattler:defeat(reason, violent)
                 Mod.libs["magical-glass"].kills = Mod.libs["magical-glass"].kills + 1
             end
             Game.battle.xp = Game.battle.xp + self.experience
+            -- Only adds to the violent flag if the enemy actually died
+            -- Move this out of the if check to have the violent flag increase even if the enemy runs away after being attacked
+            if Mod.libs["magical-glass"].random_encounter and Mod.libs["magical-glass"].random_encounter.population then
+                Mod.libs["magical-glass"].random_encounter:addFlag("violent", 1)
+            end
         end
-        if Mod.libs["magical-glass"].random_encounter and Mod.libs["magical-glass"].random_encounter.population then
-            Mod.libs["magical-glass"].random_encounter:addFlag("violent", 1)
-        end
+        -- With "Out of the if check" I mean here
         if self:isRecruitable() and self:getRecruitStatus() ~= false then
             if Game:getConfig("enableRecruits") and self.done_state ~= "FROZEN" then
                 local message = self:lightStatusMessage("text", "LOST", { 255 / 255, 0 / 255, 0 / 255 }, true)

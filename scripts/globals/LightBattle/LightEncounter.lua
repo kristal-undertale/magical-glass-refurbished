@@ -109,6 +109,11 @@ end
 function LightEncounter:onActionsStart() end
 function LightEncounter:onActionsEnd() end
 
+---@return boolean decrease_invuln
+function LightEncounter:shouldDecreaseInvuln()
+    return Game.battle.soul ~= nil and Game.battle.soul:shouldDecreaseInvuln()
+end
+
 function LightEncounter:onCharacterTurn(battler, undo) end
 
 function LightEncounter:canFlee()

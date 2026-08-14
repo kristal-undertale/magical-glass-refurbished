@@ -282,11 +282,17 @@ function LightBattle:spawnSoul(x, y)
     y = y or by
     local color = { self.encounter:getSoulColor() }
     if not self.soul then
+        Game:setInvulnFrames(0)
         self.soul = self.encounter:createSoul(x, y, color)
         self.soul.alpha = 1
         self.soul.sprite:set("player/heart_light")
         self:addChild(self.soul)
     end
+end
+
+---@return boolean? decrease_invuln
+function LightBattle:shouldDecreaseInvuln()
+    return self.encounter and self.encounter:shouldDecreaseInvuln()
 end
 
 function LightBattle:swapSoul(object)
@@ -1382,6 +1388,10 @@ function LightBattle:onDefendingState()
         wave:onStart()
 
         wave.active = true
+    end
+    
+    if not Game:getConfig("soulInvBetweenWaves") then
+        Game:setInvulnFrames(0)
     end
 
     self.soul:onWaveStart()

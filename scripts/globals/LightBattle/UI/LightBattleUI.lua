@@ -2,6 +2,18 @@
 ---@overload fun(...) : LightBattleUI
 local LightBattleUI, super = Class(Object)
 
+-- This function only exists for compatibility with the localizer addon.
+-- If this wasn't here, the localizer addon would have to hook very large parts of the file...
+-- (We dont want that)
+--
+-- I am not sure if it is more efficient to have this local function check for Assets.localizer every time it
+-- runs, or to have a method that just returns the provided argument (like LightBattleUI:gettext(t) return t end)
+-- and then hook that specific method in the addon lib. For now I am just gonna do this
+-- TODO: check whats better to do later bc i cant bother rn
+local function localize(text)
+    return Assets.localize and Assets.localize(text) or text
+end
+
 function LightBattleUI:init()
     super.init(self, 0, 270)
 
@@ -330,8 +342,8 @@ function LightBattleUI:drawState()
                 text_offset = text_offset + font:getWidth(name)
             else
                 menu_text:setPosition(text_offset + 63 + (x * (240 + extra_offset[2])), 15 + (y * 32))
-                menu_text:setText("[shake:"..Mod.libs["magical-glass"].light_battle_shake_text.."]" .. "* " .. name)
-                text_offset = text_offset + font:getWidth("* " .. name) + 5
+                menu_text:setText("[shake:"..Mod.libs["magical-glass"].light_battle_shake_text.."]" .. localize("* " .. name))
+                text_offset = text_offset + font:getWidth(localize("* " .. name)) + 5
             end
 
             if item.icons then
@@ -446,7 +458,7 @@ function LightBattleUI:drawState()
         end
         
         for _, enemy in ipairs(Game.battle:getActiveEnemies()) do
-            local enemy_name = "* " .. enemy.name .. (self.enemy_counter[enemy.id] > 1 and enemy.index ~= "" and " " .. enemy.index or "")
+            local enemy_name = localize("* " .. enemy.name) .. (self.enemy_counter[enemy.id] > 1 and enemy.index ~= "" and " " .. enemy.index or "")
             if self.xact_x_pos < font_mono:getWidth(enemy_name) + 123 then
                 self.xact_x_pos = font_mono:getWidth(enemy_name) + 123
             end
@@ -496,11 +508,11 @@ function LightBattleUI:drawState()
 
                 if #name_colors <= 1 then
                     enemy_text:setColor(name_colors[1] or enemy.selectable and {1, 1, 1} or {0.5, 0.5, 0.5})
-                    enemy_text:setText("[shake:"..Mod.libs["magical-glass"].light_battle_shake_text.."]" .. (enemy.rainbow_name and "*" or name))
+                    enemy_text:setText("[shake:"..Mod.libs["magical-glass"].light_battle_shake_text.."]" .. localize(enemy.rainbow_name and "*" or name))
                 else
                     enemy_text:setColor(1, 1, 1)
                     enemy_text:setGradientColors(name_colors)
-                    enemy_text:setText("[shake:"..Mod.libs["magical-glass"].light_battle_shake_text.."]" .. (enemy.rainbow_name and "*" or name))
+                    enemy_text:setText("[shake:"..Mod.libs["magical-glass"].light_battle_shake_text.."]" .. localize(enemy.rainbow_name and "*" or name))
                 end
                 
                 if enemy.rainbow_name then

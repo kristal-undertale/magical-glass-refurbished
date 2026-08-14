@@ -48,7 +48,6 @@ function LightSoul:init(x, y, color)
     self.transitioning = Game.battle:getState() ~= "DEFENDING" or not self.visible
     self.speed = Game.battle.soul_speed
 
-    self.inv_timer = 0
     self.inv_flash_timer = 0
 
     -- 1px movement increments
@@ -334,10 +333,6 @@ function LightSoul:update()
     end
 
     -- Bullet collision !!! Yay
-    if self.inv_timer > 0 then
-        self.inv_timer = MathUtils.approach(self.inv_timer, 0, DT)
-    end
-
     local collided_bullets = {}
     Object.startCache()
     for _, bullet in ipairs(Game.stage:getObjects(Bullet)) do
@@ -346,7 +341,7 @@ function LightSoul:update()
             -- to avoid issues with cacheing inside onCollide
             table.insert(collided_bullets, bullet)
         end
-        if self.inv_timer == 0 and Game.battle:getState() == "DEFENDING" then
+        if not Game:hasInvulnerability() and Game.battle:getState() == "DEFENDING" then
             if bullet:canGraze() and bullet:collidesWith(self.graze_collider) then
                 local old_graze = bullet.grazed
                 if bullet.grazed then
@@ -378,7 +373,8 @@ function LightSoul:update()
     end
 
     -- Invulnerability frames flash faster in Undertale
-    if self.inv_timer > 0 then
+    local state = Game.battle:getState()
+    if Game.inv_frames > 0 and (state == "DEFENDING" or #Game.battle.menu_waves > 0) then
         self.inv_flash_timer = self.inv_flash_timer + DT
         local amt = math.floor(self.inv_flash_timer / (2 / 30))
         if (amt % 2) == 1 then
@@ -392,6 +388,14 @@ function LightSoul:update()
     end
 
     super.update(self)
+end
+
+---@return boolean
+function LightSoul:shouldDecreaseInvuln()
+    if not self.transitioning then
+        return true
+    end
+    return #Game.battle.menu_waves > 0
 end
 
 function LightSoul:draw()
