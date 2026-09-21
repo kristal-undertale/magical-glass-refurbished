@@ -42,7 +42,7 @@ end
 ---------------------------------------
 
 function CollisionUtil.rectRect(x1, y1, w1, h1, x2, y2, w2, h2)
-    if not Kristal.getLibConfig("magical-glass", "undertale_collision_overlap") then
+    if not Kristal.getLibConfig("magical-glass", "undertale_collision") then
         return super.rectRect(x1, y1, w1, h1, x2, y2, w2, h2)
     end
 
@@ -50,7 +50,7 @@ function CollisionUtil.rectRect(x1, y1, w1, h1, x2, y2, w2, h2)
 end
 
 function CollisionUtil.rectPolygon(rx, ry, rw, rh, poly)
-    if not Kristal.getLibConfig("magical-glass", "undertale_collision_overlap") then
+    if not Kristal.getLibConfig("magical-glass", "undertale_collision") then
         return super.rectPolygon(rx, ry, rw, rh, poly)
     end
 
@@ -64,7 +64,7 @@ function CollisionUtil.rectPolygon(rx, ry, rw, rh, poly)
 end
 
 function CollisionUtil.polygonRect(poly, rx, ry, rw, rh)
-    if not Kristal.getLibConfig("magical-glass", "undertale_collision_overlap") then
+    if not Kristal.getLibConfig("magical-glass", "undertale_collision") then
         return super.polygonRect(poly, rx, ry, rw, rh)
     end
 
@@ -78,7 +78,7 @@ function CollisionUtil.polygonRect(poly, rx, ry, rw, rh)
 end
 
 function CollisionUtil.rectLine(rx, ry, rw, rh, x1, y1, x2, y2)
-    if not Kristal.getLibConfig("magical-glass", "undertale_collision_overlap") then
+    if not Kristal.getLibConfig("magical-glass", "undertale_collision") then
         return super.rectLine(rx, ry, rw, rh, x1, y1, x2, y2)
     end
 
@@ -91,7 +91,7 @@ function CollisionUtil.rectLine(rx, ry, rw, rh, x1, y1, x2, y2)
 end
 
 function CollisionUtil.lineRect(x1, y1, x2, y2, rx, ry, rw, rh)
-    if not Kristal.getLibConfig("magical-glass", "undertale_collision_overlap") then
+    if not Kristal.getLibConfig("magical-glass", "undertale_collision") then
         return super.lineRect(x1, y1, x2, y2, rx, ry, rw, rh)
     end
 
@@ -104,7 +104,7 @@ function CollisionUtil.lineRect(x1, y1, x2, y2, rx, ry, rw, rh)
 end
 
 function CollisionUtil.linePolygon(x1, y1, x2, y2, poly)
-    if not Kristal.getLibConfig("magical-glass", "undertale_collision_overlap") then
+    if not Kristal.getLibConfig("magical-glass", "undertale_collision") then
         return super.linePolygon(x1, y1, x2, y2, poly)
     end
 
@@ -120,7 +120,7 @@ function CollisionUtil.linePolygon(x1, y1, x2, y2, poly)
 end
 
 function CollisionUtil.polygonLine(poly, x1, y1, x2, y2)
-    if not Kristal.getLibConfig("magical-glass", "undertale_collision_overlap") then
+    if not Kristal.getLibConfig("magical-glass", "undertale_collision") then
         return super.polygonLine(poly, x1, y1, x2, y2)
     end
 

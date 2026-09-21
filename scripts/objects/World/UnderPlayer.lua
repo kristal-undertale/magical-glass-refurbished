@@ -11,7 +11,6 @@
 ---@field slope_blocked boolean
 ---@field on_slope boolean
 ---@field xprevious number
----@field yprevious number
 local UnderPlayer, super = Class(Player)
 
 -- this is basically a complete rewrite atp 💔
@@ -30,9 +29,20 @@ function UnderPlayer:init(chara, x, y)
     self._uw_walk_frame = 1
     self.slope_blocked = false
 
-    self:snapToGrid()
     self.xprevious = self.x
-    self.yprevious = self.y
+end
+
+function UnderPlayer:setActor(actor)
+    super.setActor(self, actor)
+    self:setHitbox(self.collider:getBounds())
+end
+
+function UnderPlayer:setHitbox(x, y, w, h)
+    if Kristal.getLibConfig("magical-glass", "undertale_collision") then
+        self:setCollider(LightHitbox(self, x, y, w, h))
+    else
+        super.setHitbox(self, x, y, w, h)
+    end
 end
 
 --- get the direction the player is sliding to
@@ -73,6 +83,9 @@ end
 ---@param down boolean
 ---@return boolean
 function UnderPlayer:checkSlopeConflict(slope_dir, left, up, right, down)
+    if up and down then
+        return self:checkSlopeCancel(slope_dir, left, up, right, down)
+    end
     if slope_dir == "sul" or slope_dir == "sdr" then
         return (right and down) or (up and left)
     elseif slope_dir == "sur" or slope_dir == "sdl" then
@@ -81,19 +94,23 @@ function UnderPlayer:checkSlopeConflict(slope_dir, left, up, right, down)
     return false
 end
 
-function UnderPlayer:setPosition(...)
-    local result = super.setPosition(self, ...)
-    self:snapToGrid()
-    self.xprevious = self.x
-    self.yprevious = self.y
-    return result
+---@param slope_dir string
+---@param left boolean
+---@param up boolean
+---@param right boolean
+---@param down boolean
+---@return boolean
+function UnderPlayer:checkSlopeCancel(slope_dir, left, up, right, down)
+    if slope_dir == "sdr" then return down and right end
+    if slope_dir == "sur" then return up and right end
+    if slope_dir == "sul" then return up and left end
+    if slope_dir == "sdl" then return down and left end
+    return false
 end
 
---- undertale player object moves frisk in 3px steps (6px here bc kristal is 2x scale)
-function UnderPlayer:snapToGrid()
-    local step = self:getBaseWalkSpeed()
-    self.x = math.ceil(self.x / step - 0.5) * step
-    self.y = math.ceil(self.y / step - 0.5) * step
+function UnderPlayer:setPosition(...)
+    super.setPosition(self, ...)
+    self.xprevious = self.x
 end
 
 --- checks if "target" is an event object (interactables, etc)
@@ -103,7 +120,7 @@ end
 function UnderPlayer:isEventObject(target)
     if not target or not target.includes then return false end
     if target["ignore_collide"] then return false end
-    return target:includes(Event) or target:includes(Interactable) or target:includes(NPC)
+    return target:includes(Event) or target:includes(NPC)
 end
 
 --- check if a collider has collided with something
@@ -114,8 +131,8 @@ function UnderPlayer:checkCollision(collider)
     Object.startCache()
     local hit = false
     for _, other in ipairs(self.world:getCollision(self.enemy_collision)) do
-        if collider:collidesWith(other) and collider ~= other then
-            local parent = other.parent
+        if collider:meetsCollider(other) and collider ~= other then
+            local parent = other:getOwner()
             if not (parent and self:isEventObject(parent)) and not other.slope_dir then
                 hit = true
                 break
@@ -124,16 +141,6 @@ function UnderPlayer:checkCollision(collider)
     end
     Object.endCache()
     return hit
-end
-
---- checks for collisions in a rectangular area
----@param left number
----@param top number
----@param right number
----@param bottom number
----@return boolean
-function UnderPlayer:checkCollisionRect(left, top, right, bottom)
-    return self:checkCollision(Hitbox(self, left, top, right - left, bottom - top))
 end
 
 --- checks for collisions in a line
@@ -152,10 +159,7 @@ end
 ---@return number right
 ---@return number bottom
 function UnderPlayer:getHitboxOffsets()
-    local hx, hy, hw, hh = 0, 0, self.width or 0, self.height or 0
-    if self.actor and self.actor.hitbox then
-        hx, hy, hw, hh = TableUtils.unpack(self.actor.hitbox)
-    end
+    local hx, hy, hw, hh = self.collider:getBounds()
     return hx + 2, hy, hx + hw - 2, hy + hh
 end
 
@@ -178,36 +182,30 @@ end
 ---@return Object? wall_target
 ---@return Object? slope_target
 ---@return ("sul"|"sur"|"sdl"|"sdr")? slope_dir
----@return Collider? slope_collider
 ---@return Object? event_target
 function UnderPlayer:checkSolidCollision()
     if self.noclip or NOCLIP then return end
     Object.startCache()
 
-    local fired_transitions = {}
     for _, child in ipairs(self.world.children) do
-        if child:includes(Transition) and self.collider:collidesWith(child.collider) and not fired_transitions[child] then
-            fired_transitions[child] = true
+        if child:includes(Transition) and self.collider:meetsCollider(child.collider) then
             child:onEnter(self)
         end
     end
 
-    local wall_target, slope_target, slope_dir, slope_collider, event_target
-    local fired_events = {}
+    local wall_target, slope_target, slope_dir, event_target
     for _, other in ipairs(self.world:getCollision(self.enemy_collision)) do
-        if self.collider:collidesWith(other) and self.collider ~= other then
-            local parent = other.parent
+        if self.collider:meetsCollider(other) and self.collider ~= other then
+            local parent = other:getOwner()
             if parent and self:isEventObject(parent) then
                 if not event_target then event_target = parent end
-                if parent.onCollide and not fired_events[parent] then
-                    fired_events[parent] = true
+                if parent.onCollide then
                     parent:onCollide(self)
                 end
             elseif other.slope_dir then
                 if not slope_target then
                     slope_target = parent
                     slope_dir = other.slope_dir
-                    slope_collider = other
                 end
             else
                 wall_target = wall_target or parent
@@ -215,7 +213,7 @@ function UnderPlayer:checkSolidCollision()
         end
     end
     Object.endCache()
-    return wall_target, slope_target, slope_dir, slope_collider, event_target
+    return wall_target, slope_target, slope_dir, event_target
 end
 
 function UnderPlayer:updateWalk()
@@ -301,7 +299,7 @@ function UnderPlayer:handleMovement()
     Object.uncache(self)
 
     if (not self.noclip) and (not NOCLIP) then
-        local wall_target, slope_target, slope_dir, _, event_target = self:checkSolidCollision()
+        local wall_target, slope_target, slope_dir, event_target = self:checkSolidCollision()
         local touching_slope = slope_target ~= nil
 
         local dx, dy, slide_blocked = 0, 0, false
@@ -317,7 +315,9 @@ function UnderPlayer:handleMovement()
 
         self.slope_blocked = false
         if dancing and slope_target then
-            if dy < 0 and not slide_blocked then -- sliding up slope
+            if wall_target then
+                self:resolveWall(wall_target, step_start_x, step_start_y, left, up, right, down)
+            elseif dy < 0 and not slide_blocked then -- sliding up slope
                 self:resolveSlope(slope_target, slope_dir, step_start_x, step_start_y, left, up, right, down)
                 self.on_slope = true
                 self.slope_blocked = true
@@ -327,8 +327,6 @@ function UnderPlayer:handleMovement()
                 self.moving = false
                 Object.uncache(self)
                 self.slope_blocked = true
-            elseif wall_target then -- touching a collision block and a slope but not sliding
-                self:resolveWall(wall_target, step_start_x, step_start_y, left, up, right, down)
             else -- trying to move into slope while doing frisk dance
                 self.x = step_start_x
                 self.y = step_start_y
@@ -362,7 +360,6 @@ function UnderPlayer:handleMovement()
     end
 
     self.xprevious = step_start_x
-    self.yprevious = step_start_y
 end
 
 ---@param target (Event|Object)?
@@ -415,7 +412,7 @@ function UnderPlayer:resolveWall(target, step_start_x, step_start_y, left, up, r
     Object.uncache(self)
 
     if self.x ~= step_start_x or self.y ~= step_start_y then
-        local w2, s2, sd2, _, e2 = self:checkSolidCollision()
+        local w2, s2, sd2, e2 = self:checkSolidCollision()
         if w2 or e2 then
             self.x = step_start_x
             self.y = step_start_y
@@ -504,11 +501,8 @@ function UnderPlayer:updateWalkFrame()
         end
         local ws = self:getBaseWalkSpeed()
         self.moved = ws
-        self.sprite.walking = true
-        self.sprite.walk_speed = ws
     else
         self._uw_walk_frame = 1
-        self.sprite.walking = false
         self.moved = 0
     end
 

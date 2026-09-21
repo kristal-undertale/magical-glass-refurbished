@@ -1,12 +1,43 @@
 local Lib = {}
 
+function Lib:registerColliderTypes()
+    CollisionRegistry.LIGHT_HITBOX = "light_hitbox"
+
+    CollisionRegistry.registerType(CollisionRegistry.LIGHT_HITBOX, LightHitbox)
+end
+
+function Lib:registerCollisions()
+    local light = CollisionRegistry.LIGHT_HITBOX
+
+    CollisionRegistry.register(light, light, KristalCollisions.rectRect)
+    CollisionRegistry.register(light, CollisionRegistry.RECTANGLE, KristalCollisions.rectRect, true)
+    CollisionRegistry.register(light, CollisionRegistry.LINE, LightHitbox.rectLine, true)
+    CollisionRegistry.register(light, CollisionRegistry.CIRCLE, LightHitbox.rectCircle, true)
+    CollisionRegistry.register(light, CollisionRegistry.POINT, KristalCollisions.rectPoint, true)
+    CollisionRegistry.register(light, CollisionRegistry.POLYGON, LightHitbox.rectPolygon, true)
+
+    CollisionRegistry.registerInner(light, light, KristalCollisions.rectRectInner)
+    CollisionRegistry.registerInner(light, CollisionRegistry.RECTANGLE, KristalCollisions.rectRectInner)
+    CollisionRegistry.registerInner(CollisionRegistry.RECTANGLE, light, KristalCollisions.rectRectInner)
+    CollisionRegistry.registerInner(light, CollisionRegistry.LINE, KristalCollisions.rectLineInner)
+    CollisionRegistry.registerInner(CollisionRegistry.LINE, light, KristalCollisions.lineRectInner)
+    CollisionRegistry.registerInner(light, CollisionRegistry.CIRCLE, KristalCollisions.rectCircleInner)
+    CollisionRegistry.registerInner(CollisionRegistry.CIRCLE, light, KristalCollisions.circleRectInner)
+    CollisionRegistry.registerInner(light, CollisionRegistry.POINT, KristalCollisions.rectPointInner)
+    CollisionRegistry.registerInner(CollisionRegistry.POINT, light, KristalCollisions.pointRectInner)
+    CollisionRegistry.registerInner(light, CollisionRegistry.POLYGON, KristalCollisions.rectPolygonInner)
+    CollisionRegistry.registerInner(CollisionRegistry.POLYGON, light, KristalCollisions.polygonRectInner)
+end
+
 function Lib:cleanup()
     MG_PALETTE               = nil
     MG_EVENT                 = nil
     MG_GAMEOVERS             = nil
     LIGHT_BATTLE_LAYERS      = nil
     LIGHT_SHOP_LAYERS        = nil
-    
+
+    CollisionRegistry.LIGHT_HITBOX = nil
+
     Textbox.REACTION_X_BATTLE = ORIG_REACTION_X_BATTLE
     Textbox.REACTION_Y_BATTLE = ORIG_REACTION_Y_BATTLE
     ORIG_REACTION_X_BATTLE = nil

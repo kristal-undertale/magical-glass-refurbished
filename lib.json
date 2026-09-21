@@ -82,6 +82,14 @@
         // Enables the ability to run when using the Undertale player movement.
         /////
         "undertale_movement_can_run": false,
+
+        ///// UNDERTALE Collision
+        // If true, collision works like UT's; colliders only collide when they are actually overlapping instead of also counting  colliders that are just touching along their edges.
+        /////
+        // false = Use Kristal's default collisions
+        // true = Use the UT collisions
+        /////
+        "undertale_collision": true,
         
         ///// Balanced UNDERTALE Items Price
         // Whether to use balanced buy and sell prices for UNDERTALE items or use the original UNDERTALE prices.
